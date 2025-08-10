@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweet Heart Hotel</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e67e22, #f39c12);
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+      padding: 0.5rem 1rem;
+    }
+    .navbar .logo {
+      max-height: 50px;
+      width: auto;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li {
+      margin-left: 1.5rem;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    .nav-links a:hover {
+      color: #e67e22;
+    }
+
+    /* Banner */
+    .banner-section-bg-container {
+      background: linear-gradient(to right, #e67e22, #f39c12);
+      color: #fff;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+    .banner-heading {
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+    .banner-heading2 {
+      font-size: 1.5rem;
+      font-weight: bolder;
+    }
+    .banner-paragraph {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .banner-paragraph2 {
+      font-size: 1.1rem;
+    }
+
+    /* Buttons */
+    .custom-button, .custom-outline-button {
+      padding: 0.6rem 1.4rem;
+      border-radius: 25px;
+      font-weight: 600;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    .custom-button {
+      background-color: #fff;
+      color: #e67e22;
+    }
+    .custom-button:hover {
+      background-color: #fce5cd;
+    }
+    .custom-outline-button {
+      background-color: transparent;
+      border: 2px solid #fff;
+      color: #fff;
+      margin-left: 0.5rem;
+    }
+    .custom-outline-button:hover {
+      background-color: #fff;
+      color: #e67e22;
+    }
+
+    /* Menu Section */
+    #menu {
+      padding: 2rem 1rem;
+    }
+    embed {
+      border: none;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        background: #fff;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 200px;
+        display: none;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      }
+      .nav-links li {
+        margin: 1rem 0;
+        text-align: center;
+      }
+      .navbar {
+        background-image: linear-gradient(to right bottom, #ad1515, #500000df);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .menu-toggle {
+        color: #fff;
+        display: block;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+      .nav-active {
+        display: flex !important;
+      }
+      .banner-heading {
+        font-size: 1.8rem;
+      }
+      .banner-paragraph {
+        padding-top: 32px;
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <img src="ChatGPT Image Aug 6, 2025, 08_23_41 PM.png" class="logo" alt="Sweet Heart Hotel Logo">
+    <span class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('nav-active')">&#9776;</span>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="aboutsh.html" target="_blank">About Us</a></li>
+      <li><a href="https://wa.me/919999999999?">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Banner -->
+  <div class="banner-section-bg-container">
+    <h1 class="banner-heading">"Welcome to Sweet Heart Restaurant — where every bite is a taste of home, and every guest is family."</h1>
+    <p class="banner-paragraph">Eat Hyderabadi Biryani, Dalcha, and Many More.</p>
+    <h1 class="banner-heading2">What Would You Like to have Today?</h1>
+    <p class="banner-paragraph2">View our menu or Explore Sweetie Pie.</p>
+    <a href="xyz.html"><button class="custom-button">View Menu</button></a>
+    <a href="sweetiepie.html"><button class="custom-outline-button">Sweetie Pie</button></a>
+  </div>
+
+ 
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+
+</body>
+</html>

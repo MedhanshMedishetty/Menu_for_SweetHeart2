@@ -1,0 +1,3449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweet Heart Restaurant Menu</title>
+  <style>
+    html, body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #ffd992;
+      height: 100%;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: rgb(255, 230, 147);
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+    }
+
+    .filters button {
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: none;
+      background: #eee;
+      cursor: pointer;
+    }
+
+    .menu-section {
+      padding: 10px;
+    }
+
+    .section-title {
+      font-size: 30px;
+      font-family: "Roboto Slab", serif;
+      font-weight: bolder;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .menu-card {
+      background: rgb(255, 248, 228);
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .menu-card h4 {
+      margin: 10px 0 5px;
+    }
+
+    .menu-card .price {
+      font-weight: bold;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    .menu-card img {
+  width: 100px;         /* fixed width */
+  height: 100px;        /* fixed height */
+  object-fit: cover;    /* crop to fit without distortion */
+  border-radius: 8px;   /* optional: rounded corners */
+  display: block;
+  margin: 0 auto 8px auto; /* center the image and give spacing below */
+}
+
+
+    .menu-fab {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: black;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 200;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: background 0.3s;
+    }
+
+    .menu-fab:hover {
+      background: #222;
+    }
+
+    .category-overlay {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.95);
+      color: white;
+      padding: 20px;
+      border-radius: 20px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 201;
+      animation: fadeIn 0.3s ease-in-out;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .category-overlay button {
+      background: #333;
+      color: white;
+      text-align: left;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .category-overlay button:hover {
+      background: #555;
+    }
+
+    .menu-card {
+  position: relative;
+}
+
+.info-btn {
+  margin-top: 8px;
+  padding: 5px 8px;
+  font-size: 14px;
+  border: none;
+  background: #000; /* Black button */
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.info-btn:hover {
+  background: #222;
+}
+
+.info-popup {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  width: 200px;
+  margin-top: 6px;
+  font-size: 13px;
+  z-index: 300;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.info-popup::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent;
+}
+
+/* show popup when it has .open */
+.info-popup.open {
+  display: block;
+  animation: pop 0.12s ease-out;
+}
+
+@keyframes pop {
+  from { transform: translateY(-6px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+/* Navbar */
+.navbar {
+  background-color: #fff;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+  padding: 0.5rem 1rem;
+}
+
+.navbar .logo {
+  max-height: 50px;
+  width: auto;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-left: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #e67e22;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    background: #fff;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 200px;
+    display: none;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .nav-links li {
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .navbar {
+    background-image: linear-gradient(to right bottom, #ad1515, #500000df);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-active {
+    display: flex !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <img src="ChatGPT Image Aug 6, 2025, 08_23_41 PM.png" class="logo" alt="Sweet Heart Hotel Logo">
+</nav>
+
+
+<!-- Chinese section (with visible sub-headings) -->
+<div class="menu-section" id="chinese">
+  <div class="section-title">Chinese</div>
+  <div class="menu-grid">
+
+    <!-- Non-Veg Soups -->
+    <div id="nonVegSoups"></div>
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 4px;">Non-Veg Soups</h3>
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CORN SOUP">
+      <h4>CHICKEN CORN SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-corn-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-corn-soup-info">Velvety corn soup with tender chicken pieces and a hint of pepper.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN HOT & SOUR SOUP">
+      <h4>CHICKEN HOT & SOUR SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-hot-sour-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-hot-sour-soup-info">Tangy, spicy broth with shredded chicken and crunchy vegetables.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN TALMIN SOUP">
+      <h4>CHICKEN TALMIN SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-talmin-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-talmin-soup-info">Clear, aromatic soup with delicate chicken and mild seasonings.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CANTON SOUP">
+      <h4>CHICKEN CANTON SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-canton-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-canton-soup-info">Hearty Canton-style soup with shredded chicken and savory broth.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CORIENDER SOUP">
+      <h4>CHICKEN CORIENDER SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-coriender-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-coriender-soup-info">Fresh coriander lifts this fragrant chicken soup with light spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SHANGHAI SOUP">
+      <h4>CHICKEN SHANGHAI SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-shanghai-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-shanghai-soup-info">Rich, savory Shanghai-style soup with tender chicken and umami notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CLEAR SOUP">
+      <h4>CHICKEN CLEAR SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-clear-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-clear-soup-info">Light, clear broth with shredded chicken and subtle seasoning.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MAN CHOW SOUP">
+      <h4>CHICKEN MAN CHOW SOUP</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-man-chow-soup-info')">More Info</button>
+      <div class="info-popup" id="chicken-man-chow-soup-info">Spicy and tangy Manchow-style soup packed with chicken and veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL SOUP">
+      <h4>S.H. SPL SOUP</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-soup-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-soup-info">House special soup — bold flavors with a chef’s custom spice blend.</div>
+    </div>
+
+    <!-- Non-Veg Snacks -->
+    <div id="nonVegSnacks"></div>
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 4px;">Non-Veg Snacks</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN 65">
+      <h4>CHICKEN 65</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-65-info')">More Info</button>
+      <div class="info-popup" id="chicken-65-info">Crispy, spicy fried chicken nuggets tossed in tangy masala.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MANCHURIAN">
+      <h4>CHICKEN MANCHURIAN</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-manchurian-info')">More Info</button>
+      <div class="info-popup" id="chicken-manchurian-info">Saucy Indo-Chinese chicken with sweet, tangy and spicy notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CHILLI">
+      <h4>CHICKEN CHILLI</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-chilli-info')">More Info</button>
+      <div class="info-popup" id="chicken-chilli-info">Stir-fried chicken with green chillies, peppers and savory sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SPL CHILLI">
+      <h4>CHICKEN SPL CHILLI</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('chicken-spl-chilli-info')">More Info</button>
+      <div class="info-popup" id="chicken-spl-chilli-info">House special chilli chicken — extra flavors and spice kick.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MEJESTIC">
+      <h4>CHICKEN MEJESTIC</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-mejestic-info')">More Info</button>
+      <div class="info-popup" id="chicken-mejestic-info">Chef’s special tender chicken with a rich, aromatic sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PEPPER CHICKEN">
+      <h4>PEPPER CHICKEN</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('pepper-chicken-info')">More Info</button>
+      <div class="info-popup" id="pepper-chicken-info">Black pepper-forward chicken stir-fry with bold, warm flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SCHEZWAN">
+      <h4>CHICKEN SCHEZWAN</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-schezwan-info')">More Info</button>
+      <div class="info-popup" id="chicken-schezwan-info">Spicy Schezwan-style chicken tossed in fiery red sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN GINGER">
+      <h4>CHICKEN GINGER</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-ginger-info')">More Info</button>
+      <div class="info-popup" id="chicken-ginger-info">Savory chicken with fresh ginger, light sauce and spring onion.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN GARLIC">
+      <h4>CHICKEN GARLIC</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-garlic-info')">More Info</button>
+      <div class="info-popup" id="chicken-garlic-info">Aromatic garlic-infused chicken, pan-seared with savory glaze.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FRIED CHICKEN">
+      <h4>FRIED CHICKEN</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('fried-chicken-info')">More Info</button>
+      <div class="info-popup" id="fried-chicken-info">Crispy, golden fried chicken with crunchy coating.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN DRUMSTICK">
+      <h4>CHICKEN DRUMSTICK</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-drumstick-info')">More Info</button>
+      <div class="info-popup" id="chicken-drumstick-info">Succulent drumsticks marinated and cooked to juicy perfection.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN PAKODA">
+      <h4>CHICKEN PAKODA</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('chicken-pakoda-info')">More Info</button>
+      <div class="info-popup" id="chicken-pakoda-info">Spiced chicken fritters, crispy and perfect as a snack.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SALT & PEPPER">
+      <h4>CHICKEN SALT & PEPPER</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-salt-pepper-info')">More Info</button>
+      <div class="info-popup" id="chicken-salt-pepper-info">Cracked pepper and salt tossed chicken, crunchy and savory.</div>
+    </div>
+
+    <!-- Non-Veg Noodles -->
+    <div id="nonVegNoodles"></div>
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 4px;">Non-Veg Noodles</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SOFT NOODLES">
+      <h4>CHICKEN SOFT NOODLES</h4>
+      <div class="price">₹200</div>
+      <button class="info-btn" onclick="showInfo('chicken-soft-noodles-info')">More Info</button>
+      <div class="info-popup" id="chicken-soft-noodles-info">Soft, silky noodles tossed with tender chicken and light sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS SOFT NOODLES">
+      <h4>PRAWNS SOFT NOODLES</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('prawns-soft-noodles-info')">More Info</button>
+      <div class="info-popup" id="prawns-soft-noodles-info">Delicate prawns with soft noodles and subtle seasonings.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="EGG SOFT NOODLES">
+      <h4>EGG SOFT NOODLES</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('egg-soft-noodles-info')">More Info</button>
+      <div class="info-popup" id="egg-soft-noodles-info">Egg-enriched soft noodles, simply seasoned and comforting.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI GARLIC CHICKEN NOODLES">
+      <h4>CHILLI GARLIC CHICKEN NOODLES</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('chilli-garlic-chicken-noodles-info')">More Info</button>
+      <div class="info-popup" id="chilli-garlic-chicken-noodles-info">Spicy chilli-garlic noodles tossed with strips of chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI GARLIC PRAWNS NOODLES">
+      <h4>CHILLI GARLIC PRAWNS NOODLES</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('chilli-garlic-prawns-noodles-info')">More Info</button>
+      <div class="info-popup" id="chilli-garlic-prawns-noodles-info">Prawns and noodles in a bold chilli-garlic sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI GARLIC EGG NOODLES">
+      <h4>CHILLI GARLIC EGG NOODLES</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('chilli-garlic-egg-noodles-info')">More Info</button>
+      <div class="info-popup" id="chilli-garlic-egg-noodles-info">Egg noodles with a punchy chilli-garlic flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SINGAPORE CHICKEN NOODLES">
+      <h4>SINGAPORE CHICKEN NOODLES</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('singapore-chicken-noodles-info')">More Info</button>
+      <div class="info-popup" id="singapore-chicken-noodles-info">Light curry-spiced Singapore-style noodles with chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN CHICKEN NOODLES">
+      <h4>SCHEZWAN CHICKEN NOODLES</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('schezwan-chicken-noodles-info')">More Info</button>
+      <div class="info-popup" id="schezwan-chicken-noodles-info">Fiery Schezwan sauce tossed with chicken and noodles.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN PRAWNS NOODLES">
+      <h4>SCHEZWAN PRAWNS NOODLES</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('schezwan-prawns-noodles-info')">More Info</button>
+      <div class="info-popup" id="schezwan-prawns-noodles-info">Prawns tossed in spicy Schezwan sauce with noodles.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN EGG NOODLES">
+      <h4>SCHEZWAN EGG NOODLES</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('schezwan-egg-noodles-info')">More Info</button>
+      <div class="info-popup" id="schezwan-egg-noodles-info">Egg noodles in a spicy Schezwan-style toss.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MIXED NOODLES">
+      <h4>MIXED NOODLES</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('mixed-noodles-info')">More Info</button>
+      <div class="info-popup" id="mixed-noodles-info">A medley of vegetables, eggs, and your choice of protein.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL CHICKEN NOODLES">
+      <h4>S.H. SPL CHICKEN NOODLES</h4>
+      <div class="price">₹260</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-chicken-noodles-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-chicken-noodles-info">House special noodles with signature spices and chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL PRAWNS NOODLES">
+      <h4>S.H. SPL PRAWNS NOODLES</h4>
+      <div class="price">₹280</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-prawns-noodles-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-prawns-noodles-info">House special prawns noodles — rich and flavorful.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL EGG NOODLES">
+      <h4>S.H. SPL EGG NOODLES</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-egg-noodles-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-egg-noodles-info">Signature egg noodles with chef’s special seasoning.</div>
+    </div>
+
+    <!-- Chinese: Non-Veg Fried Rice & Chinese Non-Veg Curries -->
+    <div id="nonVegFriedRice"></div>
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Non-Veg Fried Rice</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN FRIED RICE">
+      <h4>CHICKEN FRIED RICE</h4>
+      <div class="price">₹200</div>
+      <button class="info-btn" onclick="showInfo('chicken-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="chicken-fried-rice-info">Classic fried rice with tender chicken and tossed vegetables.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS FRIED RICE">
+      <h4>PRAWNS FRIED RICE</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('prawns-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="prawns-fried-rice-info">Fragrant fried rice studded with juicy prawns.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="EGG FRIED RICE">
+      <h4>EGG FRIED RICE</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('egg-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="egg-fried-rice-info">Soft scrambled egg folded into seasoned fried rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SINGAPORE CHICKEN FRIED RICE">
+      <h4>SINGAPORE CHICKEN FRIED RICE</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('singapore-chicken-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="singapore-chicken-fried-rice-info">Light curry-flavored fried rice with chicken and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SINGAPORE PRAWNS FRIED RICE">
+      <h4>SINGAPORE PRAWNS FRIED RICE</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('singapore-prawns-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="singapore-prawns-fried-rice-info">Curry-kissed fried rice with succulent prawns.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SINGAPORE EGG FRIED RICE">
+      <h4>SINGAPORE EGG FRIED RICE</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('singapore-egg-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="singapore-egg-fried-rice-info">Egg fried rice with Singapore-style mild curry notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN CHICKEN FRIED RICE">
+      <h4>SCHEZWAN CHICKEN FRIED RICE</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('schezwan-chicken-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="schezwan-chicken-fried-rice-info">Spicy Schezwan sauce mixed with chicken and fried rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN PRAWNS FRIED RICE">
+      <h4>SCHEZWAN PRAWNS FRIED RICE</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('schezwan-prawns-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="schezwan-prawns-fried-rice-info">Fiery Schezwan prawns tossed through fried rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN EGG FRIED RICE">
+      <h4>SCHEZWAN EGG FRIED RICE</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('schezwan-egg-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="schezwan-egg-fried-rice-info">Egg fried rice with bold Schezwan flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA CHICKEN FRIED RICE">
+      <h4>MASALA CHICKEN FRIED RICE</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('masala-chicken-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="masala-chicken-fried-rice-info">Spiced masala-infused fried rice with chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA PRAWNS FRIED RICE">
+      <h4>MASALA PRAWNS FRIED RICE</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('masala-prawns-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="masala-prawns-fried-rice-info">Masala-seasoned fried rice with prawns.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA EGG FRIED RICE">
+      <h4>MASALA EGG FRIED RICE</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('masala-egg-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="masala-egg-fried-rice-info">Flavorful masala egg fried rice, mildly spiced.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MIXED FRIED RICE">
+      <h4>MIXED FRIED RICE</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('mixed-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="mixed-fried-rice-info">A mixed medley of proteins and vegetables in fried rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL CHICKEN FRIED RICE">
+      <h4>S.H. SPL CHICKEN FRIED RICE</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-chicken-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-chicken-fried-rice-info">House special chicken fried rice with signature spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL PRAWNS FRIED RICE">
+      <h4>S.H. SPL PRAWNS FRIED RICE</h4>
+      <div class="price">₹280</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-prawns-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-prawns-fried-rice-info">House special prawns fried rice — rich and savory.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL EGG FRIED RICE">
+      <h4>S.H. SPL EGG FRIED RICE</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-egg-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-egg-fried-rice-info">House special egg fried rice with chef’s touch.</div>
+    </div>
+
+    <!-- Chinese Non-Veg Curries -->
+     <div id="nonVegCurries"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Chinese Non-Veg Curries</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHK MANCHURIAN WET">
+      <h4>CHK MANCHURIAN WET</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('chk-manchurian-wet-info')">More Info</button>
+      <div class="info-popup" id="chk-manchurian-wet-info">Manchurian-style chicken in a savory, saucy glaze.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI CHICKEN WET">
+      <h4>CHILLI CHICKEN WET</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('chilli-chicken-wet-info')">More Info</button>
+      <div class="info-popup" id="chilli-chicken-wet-info">Spicy chilli chicken cooked in a saucy, tangy base.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SPL CHILLI CHICKEN WET">
+      <h4>SPL CHILLI CHICKEN WET</h4>
+      <div class="price">₹340</div>
+      <button class="info-btn" onclick="showInfo('spl-chilli-chicken-wet-info')">More Info</button>
+      <div class="info-popup" id="spl-chilli-chicken-wet-info">House special chilli chicken with extra layers of flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GARLIC CHICKEN WET">
+      <h4>GARLIC CHICKEN WET</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('garlic-chicken-wet-info')">More Info</button>
+      <div class="info-popup" id="garlic-chicken-wet-info">Garlic-forward chicken curry with savory, aromatic sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GINGER CHICKEN WET">
+      <h4>GINGER CHICKEN WET</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('ginger-chicken-wet-info')">More Info</button>
+      <div class="info-popup" id="ginger-chicken-wet-info">Tender chicken simmered with fresh ginger and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN CHICKEN WET">
+      <h4>SCHEZWAN CHICKEN WET</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('schezwan-chicken-wet-info')">More Info</button>
+      <div class="info-popup" id="schezwan-chicken-wet-info">Bold Schezwan curry-style chicken with fiery notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CHOW CHOW">
+      <h4>CHICKEN CHOW CHOW</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('chicken-chow-chow-info')">More Info</button>
+      <div class="info-popup" id="chicken-chow-chow-info">Savory chicken curry with mixed vegetables and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="HOT GARLIC CHICKEN WET">
+      <h4>HOT GARLIC CHICKEN WET</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('hot-garlic-chicken-wet-info')">More Info</button>
+      <div class="info-popup" id="hot-garlic-chicken-wet-info">Spicy garlic-charged chicken curry with a hot finish.</div>
+    </div>
+
+    <!-- Chinese (Veg Soups / Veg Snacks / Veg Curries) -->
+     <div id="vegSoups"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Veg Soups</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CORN SOUP">
+      <h4>CORN SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('corn-soup-info')">More Info</button>
+      <div class="info-popup" id="corn-soup-info">Sweet corn kernels in a light, comforting broth.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="HOT & SOUR SOUP">
+      <h4>HOT &amp; SOUR SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('hot-sour-soup-info')">More Info</button>
+      <div class="info-popup" id="hot-sour-soup-info">Tangy and spicy soup with vegetables and a zesty finish.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CANTON SOUP">
+      <h4>CANTON SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('canton-soup-info')">More Info</button>
+      <div class="info-popup" id="canton-soup-info">A savory Canton-style vegetable soup with mild umami notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TALMIN SOUP">
+      <h4>TALMIN SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('talmin-soup-info')">More Info</button>
+      <div class="info-popup" id="talmin-soup-info">Delicate, clear vegetable broth with light seasoning.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CORIENDER SOUP">
+      <h4>CORIENDER SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('coriender-soup-info')">More Info</button>
+      <div class="info-popup" id="coriender-soup-info">Fragrant soup brightened with fresh coriander leaves.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MAIN CHOW SOUP">
+      <h4>MAIN CHOW SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('main-chow-soup-info')">More Info</button>
+      <div class="info-popup" id="main-chow-soup-info">Hearty chow-style soup with mixed vegetables and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CLEAN SOUP">
+      <h4>CLEAN SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('clean-soup-info')">More Info</button>
+      <div class="info-popup" id="clean-soup-info">Simple, light, and comforting clear vegetable broth.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SHANGHAI SOUP">
+      <h4>SHANGHAI SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('shanghai-soup-info')">More Info</button>
+      <div class="info-popup" id="shanghai-soup-info">Rich Shanghai-style vegetable soup with subtle umami.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TOMATO SOUP">
+      <h4>TOMATO SOUP</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('tomato-soup-info')">More Info</button>
+      <div class="info-popup" id="tomato-soup-info">Classic tangy tomato soup, smooth and aromatic.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL SOUP">
+      <h4>S.H. SPL SOUP</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-soup-veg-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-soup-veg-info">House special vegetarian soup with a chef’s signature blend.</div>
+    </div>
+
+    <!-- Chinese Veg Snacks -->
+     <div id="vegSnacks"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Chinese Veg Snacks</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG MANCHURIAN">
+      <h4>VEG MANCHURIAN</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('veg-manchurian-info')">More Info</button>
+      <div class="info-popup" id="veg-manchurian-info">Crispy vegetable balls in a tangy, savory Manchurian sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG CHILLI">
+      <h4>VEG CHILLI</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('veg-chilli-info')">More Info</button>
+      <div class="info-popup" id="veg-chilli-info">Spicy, wok-fried vegetables with chillies and savory glaze.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG GINGER">
+      <h4>VEG GINGER</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-ginger-info')">More Info</button>
+      <div class="info-popup" id="veg-ginger-info">Wok-tossed vegetables flavored with fresh ginger.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG SCHEZWAN">
+      <h4>VEG SCHEZWAN</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-schezwan-info')">More Info</button>
+      <div class="info-popup" id="veg-schezwan-info">Fiery Schezwan-seasoned vegetables with bold chili flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG HONG KONG">
+      <h4>VEG HONG KONG</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-hong-kong-info')">More Info</button>
+      <div class="info-popup" id="veg-hong-kong-info">Hong Kong style vegetables with delicate seasonings.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG THAI">
+      <h4>VEG THAI</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-thai-info')">More Info</button>
+      <div class="info-popup" id="veg-thai-info">Thai-inspired vegetables with mild curry and lime notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG CHOW CHOW">
+      <h4>VEG CHOW CHOW</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-chow-chow-info')">More Info</button>
+      <div class="info-popup" id="veg-chow-chow-info">Mixed veg stir-fry, wok-seared with savory sauces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG GARLIC">
+      <h4>VEG GARLIC</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-garlic-info')">More Info</button>
+      <div class="info-popup" id="veg-garlic-info">Garlic-forward vegetable stir-fry with aromatic flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI PANEER">
+      <h4>CHILLI PANEER</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('chilli-paneer-info')">More Info</button>
+      <div class="info-popup" id="chilli-paneer-info">Cubes of paneer tossed in a spicy, tangy chilli sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER 65">
+      <h4>PANEER 65</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('paneer-65-info')">More Info</button>
+      <div class="info-popup" id="paneer-65-info">Crispy marinated paneer bites with a spicy coating.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GINGER PANEER">
+      <h4>GINGER PANEER</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('ginger-paneer-info')">More Info</button>
+      <div class="info-popup" id="ginger-paneer-info">Paneer cooked with fresh ginger and mild spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER PAKODA">
+      <h4>PANEER PAKODA</h4>
+      <div class="price">₹260</div>
+      <button class="info-btn" onclick="showInfo('paneer-pakoda-info')">More Info</button>
+      <div class="info-popup" id="paneer-pakoda-info">Deep-fried paneer fritters with a crisp, spiced batter.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ONION PAKODA">
+      <h4>ONION PAKODA</h4>
+      <div class="price">₹260</div>
+      <button class="info-btn" onclick="showInfo('onion-pakoda-info')">More Info</button>
+      <div class="info-popup" id="onion-pakoda-info">Crispy onion fritters seasoned with spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GOBI 65">
+      <h4>GOBI 65</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('gobi-65-info')">More Info</button>
+      <div class="info-popup" id="gobi-65-info">Spiced, deep-fried cauliflower with a crunchy coating.</div>
+    </div>
+
+    <!-- Chinese Veg Curries -->
+     <div id="vegCurries"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Chinese Veg Curries</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG MANCHURIAN (Curry)">
+      <h4>VEG MANCHURIAN</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-manchurian-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-manchurian-curry-info">Manchurian-style veg curry with a tangy, savory sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG CHILLI (Curry)">
+      <h4>VEG CHILLI</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('veg-chilli-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-chilli-curry-info">Spicy veg chilli curry with bold, savory flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SPL VEG CHILLI">
+      <h4>SPL VEG CHILLI</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('spl-veg-chilli-info')">More Info</button>
+      <div class="info-popup" id="spl-veg-chilli-info">House special veg chilli with extra layers of flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG GINGER (Curry)">
+      <h4>VEG GINGER</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-ginger-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-ginger-curry-info">Vegetables simmered with fresh ginger and mild spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG SCHEZWAN (Curry)">
+      <h4>VEG SCHEZWAN</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-schezwan-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-schezwan-curry-info">Fiery Schezwan veg curry with robust chili notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG HONG KONG (Curry)">
+      <h4>VEG HONG KONG</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-hong-kong-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-hong-kong-curry-info">Hong Kong style veg curry, mildly spiced and aromatic.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG THAI (Curry)">
+      <h4>VEG THAI</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-thai-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-thai-curry-info">Thai-inspired veg curry with coconut and spice notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG CHOW CHOW (Curry)">
+      <h4>VEG CHOW CHOW</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-chow-chow-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-chow-chow-curry-info">Mixed veg curry with balanced savory flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG GARLIC (Curry)">
+      <h4>VEG GARLIC</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-garlic-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-garlic-curry-info">Garlic-forward veg curry with aromatic punch.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG HOT GARLIC (Curry)">
+      <h4>VEG HOT GARLIC</h4>
+      <div class="price">₹250</div>
+      <button class="info-btn" onclick="showInfo('veg-hot-garlic-curry-info')">More Info</button>
+      <div class="info-popup" id="veg-hot-garlic-curry-info">Spicy hot-garlic veg curry with a fiery finish.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL. CURRY">
+      <h4>S.H. SPL. CURRY</h4>
+      <div class="price">₹260</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-curry-veg-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-curry-veg-info">House special veg curry with the chef’s signature spice blend.</div>
+    </div>
+
+    <!-- Chinese (Veg Noodle / Veg Fried Rice / Veg From Tandoor) -->
+     <div id="vegNoodles"></div>
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Veg Noodle</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SOFT NOODLES">
+      <h4>SOFT NOODLES</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('soft-noodles-info')">More Info</button>
+      <div class="info-popup" id="soft-noodles-info">Silky, soft noodles wok-tossed with light seasoning and veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI GARLIC NOODLES">
+      <h4>CHILLI GARLIC NOODLES</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('chilli-garlic-noodles-info')">More Info</button>
+      <div class="info-popup" id="chilli-garlic-noodles-info">Noodles tossed in a punchy chilli-garlic sauce with vegetables.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SINGAPORE NOODLES">
+      <h4>SINGAPORE NOODLES</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('singapore-noodles-info')">More Info</button>
+      <div class="info-popup" id="singapore-noodles-info">Light curry-spiced noodles with vegetables and mild heat.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SCHEZWAN NOODLES">
+      <h4>SCHEZWAN NOODLES</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('schezwan-noodles-info')">More Info</button>
+      <div class="info-popup" id="schezwan-noodles-info">Fiery Schezwan-seasoned noodles with bold chili flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA NOODLES">
+      <h4>MASALA NOODLES</h4>
+      <div class="price">₹200</div>
+      <button class="info-btn" onclick="showInfo('masala-noodles-info')">More Info</button>
+      <div class="info-popup" id="masala-noodles-info">Masala-spiced noodles with aromatic Indian spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL NOODLES">
+      <h4>S.H. SPL NOODLES</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-noodles-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-noodles-info">House special noodles with the chef’s signature flavor.</div>
+    </div>
+
+    <!-- Veg Fried Rice -->
+     <div id="vegFriedRice"></div>
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Veg Fried Rice</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FRIED RICE">
+      <h4>FRIED RICE</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('fried-rice-info')">More Info</button>
+      <div class="info-popup" id="fried-rice-info">Classic vegetable fried rice, wok-tossed and fragrant.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA FRIED RICE">
+      <h4>MASALA FRIED RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('masala-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="masala-fried-rice-info">Fried rice tossed with a signature masala spice blend.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG SINGAPORE FRIED RICE">
+      <h4>VEG SINGAPORE FRIED RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('veg-singapore-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="veg-singapore-fried-rice-info">Mildly curried fried rice with mixed vegetables.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG SHEZ FRIED RICE">
+      <h4>VEG SHEZ FRIED RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('veg-shez-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="veg-shez-fried-rice-info">Schezwan-flavored veg fried rice with a spicy edge.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ZEERA RICE">
+      <h4>ZEERA RICE</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('zeera-rice-info')">More Info</button>
+      <div class="info-popup" id="zeera-rice-info">Fragrant cumin (jeera) rice, lightly tempered.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CURD RICE">
+      <h4>CURD RICE</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('curd-rice-info')">More Info</button>
+      <div class="info-popup" id="curd-rice-info">Cooling curd (yogurt) mixed with rice and mild seasoning.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GREEN PEAS FRIED RICE">
+      <h4>GREEN PEAS FRIED RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('green-peas-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="green-peas-fried-rice-info">Fried rice studded with sweet green peas and vegetables.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER FRIED RICE">
+      <h4>PANEER FRIED RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('paneer-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="paneer-fried-rice-info">Fried rice with cubes of paneer and mixed veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CORN FRIED RICE">
+      <h4>CORN FRIED RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('corn-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="corn-fried-rice-info">Sweet corn and vegetable fried rice, light and tasty.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TOMATO FRIED RICE">
+      <h4>TOMATO FRIED RICE</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('tomato-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="tomato-fried-rice-info">Tangy tomato-flavored fried rice with veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GHEE RICE">
+      <h4>GHEE RICE</h4>
+      <div class="price">₹190</div>
+      <button class="info-btn" onclick="showInfo('ghee-rice-info')">More Info</button>
+      <div class="info-popup" id="ghee-rice-info">Aromatic rice finished with rich ghee flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL FRIED RICE">
+      <h4>S.H. SPL FRIED RICE</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-fried-rice-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-fried-rice-info">House special fried rice with chef’s signature seasoning.</div>
+    </div>
+
+    <!-- Veg From Tandoor -->
+    <div id="vegTandoor"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Veg From Tandoor</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SHEEK KABAB">
+      <h4>SHEEK KABAB</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('sheek-kabab-info')">More Info</button>
+      <div class="info-popup" id="sheek-kabab-info">Minced veg kebab skewers, smoky and well-seasoned from the tandoor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BADAMI">
+      <h4>BADAMI</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('badami-info')">More Info</button>
+      <div class="info-popup" id="badami-info">Rich, almond-flavored tandoor preparation with delicate spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="HARA BHARA KABAB">
+      <h4>HARA BHARA KABAB</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('hara-bhara-kabab-info')">More Info</button>
+      <div class="info-popup" id="hara-bhara-kabab-info">Green vegetable kebab, lightly spiced and pan-roasted in tandoor style.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER TIKKA">
+      <h4>PANEER TIKKA</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('paneer-tikka-info')">More Info</button>
+      <div class="info-popup" id="paneer-tikka-info">Marinated paneer cubes charred in the tandoor with spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ANARI PANEER TIKKA">
+      <h4>ANARI PANEER TIKKA</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('anari-paneer-tikka-info')">More Info</button>
+      <div class="info-popup" id="anari-paneer-tikka-info">Paneer tikka with special Anari-style seasoning (as listed).</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ALOO TIKKA">
+      <h4>ALOO TIKKA</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('aloo-tikka-info')">More Info</button>
+      <div class="info-popup" id="aloo-tikka-info">Spiced potato tikka, grilled in tandoor until crisp.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER TAKATAK">
+      <h4>PANEER TAKATAK</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('paneer-takatak-info')">More Info</button>
+      <div class="info-popup" id="paneer-takatak-info">Tandoor-style paneer preparation with bold spices and charred edges.</div>
+    </div>
+
+
+
+
+  </div>
+</div>
+
+<!-- Sea food section (with visible sub-headings) -->
+<div class="menu-section" id="Sea Food">
+  <div class="section-title">Sea Food</div>
+  <div class="menu-grid">
+    <!-- Sea Foods section -->
+     <div id="seafoodSnacks"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Sea Food Snacks</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="APOLLO FISH">
+      <h4>APOLLO FISH</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('apollo-fish-info')">More Info</button>
+      <div class="info-popup" id="apollo-fish-info">Crispy battered fish tossed in a tangy-sweet Apollo sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FRIED FISH">
+      <h4>FRIED FISH</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('fried-fish-info')">More Info</button>
+      <div class="info-popup" id="fried-fish-info">Lightly seasoned and deep-fried fish — crunchy outside, tender inside.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FINGER FISH">
+      <h4>FINGER FISH</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('finger-fish-info')">More Info</button>
+      <div class="info-popup" id="finger-fish-info">Long fish fingers, breaded and fried — perfect as a snack.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH MANCHURIAN">
+      <h4>FISH MANCHURIAN</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('fish-manchurian-info')">More Info</button>
+      <div class="info-popup" id="fish-manchurian-info">Indo-Chinese fish in a tangy, spicy Manchurian sauce.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH CHILLI">
+      <h4>FISH CHILLI</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('fish-chilli-info')">More Info</button>
+      <div class="info-popup" id="fish-chilli-info">Spicy chilli-style fish stir-fry with peppers and aromatics.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH 65">
+      <h4>FISH 65</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('fish-65-info')">More Info</button>
+      <div class="info-popup" id="fish-65-info">Crispy, spicy South-Indian style fried fish bites.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="LOOSE PRAWNS">
+      <h4>LOOSE PRAWNS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('loose-prawns-info')">More Info</button>
+      <div class="info-popup" id="loose-prawns-info">Lightly spiced prawns, served loose — simple and delicious.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FRIED PRAWNS">
+      <h4>FRIED PRAWNS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('fried-prawns-info')">More Info</button>
+      <div class="info-popup" id="fried-prawns-info">Golden fried prawns with a crunchy exterior and juicy center.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GOLDEN PRAWNS">
+      <h4>GOLDEN PRAWNS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('golden-prawns-info')">More Info</button>
+      <div class="info-popup" id="golden-prawns-info">Crispy golden prawn bites — lightly battered and fried.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI PRAWNS">
+      <h4>CHILLI PRAWNS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('chilli-prawns-info')">More Info</button>
+      <div class="info-popup" id="chilli-prawns-info">Prawns cooked in a spicy chilli sauce with bold flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MANCHURIAN PRAWNS">
+      <h4>MANCHURIAN PRAWNS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('manchurian-prawns-info')">More Info</button>
+      <div class="info-popup" id="manchurian-prawns-info">Indo-Chinese style prawns in a savory Manchurian glaze.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BUTTER FRY PRAWNS">
+      <h4>BUTTER FRY PRAWNS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('butter-fry-prawns-info')">More Info</button>
+      <div class="info-popup" id="butter-fry-prawns-info">Prawns shallow-fried and finished with a buttery seasoning.</div>
+    </div>
+
+    <!-- Tandoori Sea Food -->
+     <div id="tandooriSeafoods"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Tandoori Sea Food</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH TIKKA">
+      <h4>FISH TIKKA</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('fish-tikka-info')">More Info</button>
+      <div class="info-popup" id="fish-tikka-info">Marinated fish pieces charred in the tandoor with spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI FISH">
+      <h4>TANDOORI FISH</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('tandoori-fish-info')">More Info</button>
+      <div class="info-popup" id="tandoori-fish-info">Classic tandoor-roasted fish with smoky, tangy flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ROYAL FISH KABAB">
+      <h4>ROYAL FISH KABAB</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('royal-fish-kabab-info')">More Info</button>
+      <div class="info-popup" id="royal-fish-kabab-info">Premium spiced fish kebab, tender and aromatic.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI PRAWNS">
+      <h4>TANDOORI PRAWNS</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('tandoori-prawns-info')">More Info</button>
+      <div class="info-popup" id="tandoori-prawns-info">Juicy prawns marinated and roasted in the tandoor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS TIKKA">
+      <h4>PRAWNS TIKKA</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('prawns-tikka-info')">More Info</button>
+      <div class="info-popup" id="prawns-tikka-info">Tandoor-style prawns, spiced and charred to perfection.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ROYAL PRAWNS KABAB">
+      <h4>ROYAL PRAWNS KABAB</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('royal-prawns-kabab-info')">More Info</button>
+      <div class="info-popup" id="royal-prawns-kabab-info">Premium prawns kebab with rich seasoning and tandoor char.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SPL S.H. PRAWNS KABAB">
+      <h4>SPL S.H. PRAWNS KABAB</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('spl-sh-prawns-kabab-info')">More Info</button>
+      <div class="info-popup" id="spl-sh-prawns-kabab-info">House special prawns kebab with the chef’s signature marinade.</div>
+    </div>
+
+    <!-- Sea Food Curries -->
+     <div id="seafoodCurries"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Sea Food Curries</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH CURRY">
+      <h4>FISH CURRY</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('fish-curry-info')">More Info</button>
+      <div class="info-popup" id="fish-curry-info">Homestyle fish curry simmered in spiced gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH MASALA">
+      <h4>FISH MASALA</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('fish-masala-info')">More Info</button>
+      <div class="info-popup" id="fish-masala-info">Rich masala-flavored fish curry with deep spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BUTTER FISH MASALA">
+      <h4>BUTTER FISH MASALA</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('butter-fish-masala-info')">More Info</button>
+      <div class="info-popup" id="butter-fish-masala-info">Creamy, buttery masala fish curry with mellow spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ACHAR FISH">
+      <h4>ACHAR FISH</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('achar-fish-info')">More Info</button>
+      <div class="info-popup" id="achar-fish-info">Pickled-style fish curry with tangy achar flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GINGER FISH">
+      <h4>GINGER FISH</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('ginger-fish-info')">More Info</button>
+      <div class="info-popup" id="ginger-fish-info">Fish simmered with fresh ginger and aromatic spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="KADAI FISH">
+      <h4>KADAI FISH</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('kadai-fish-info')">More Info</button>
+      <div class="info-popup" id="kadai-fish-info">Wok-cooked fish in rich kadai-style gravy with peppers.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS FISH">
+      <h4>PRAWNS FISH</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('prawns-fish-info')">More Info</button>
+      <div class="info-popup" id="prawns-fish-info">Prawns prepared in a savory curry-style (as listed).</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS MASALA">
+      <h4>PRAWNS MASALA</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('prawns-masala-info')">More Info</button>
+      <div class="info-popup" id="prawns-masala-info">Prawns cooked in a robust masala gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS BUTTER MASALA">
+      <h4>PRAWNS BUTTER MASALA</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('prawns-butter-masala-info')">More Info</button>
+      <div class="info-popup" id="prawns-butter-masala-info">Creamy, buttery prawns curry with rich flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ACHAR PRAWNS CURRY">
+      <h4>ACHAR PRAWNS CURRY</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('achar-prawns-curry-info')">More Info</button>
+      <div class="info-popup" id="achar-prawns-curry-info">Tangy achar-seasoned prawns curry with pickled notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GINGER PRAWNS CURRY">
+      <h4>GINGER PRAWNS CURRY</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('ginger-prawns-curry-info')">More Info</button>
+      <div class="info-popup" id="ginger-prawns-curry-info">Prawns simmered with fresh ginger and warming spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHILLI PRAWNS CURRY">
+      <h4>CHILLI PRAWNS CURRY</h4>
+      <div class="price">₹390</div>
+      <button class="info-btn" onclick="showInfo('chilli-prawns-curry-info')">More Info</button>
+      <div class="info-popup" id="chilli-prawns-curry-info">Spicy chilli prawns curry with bold, fiery flavors.</div>
+    </div>
+
+
+
+
+  </div>
+</div>
+
+<!-- Curries section -->
+ <div id="indianNonVegCurries"></div>
+
+<div class="menu-section" id="curries">
+  <div class="section-title">Curries</div>
+  <div class="menu-grid">
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Indian Non-Veg Curries</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MASALA FULL">
+      <h4>CHICKEN MASALA FULL</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-masala-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-masala-full-info">Classic chicken in a richly spiced masala gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN CURRY FULL">
+      <h4>CHICKEN CURRY FULL</h4>
+      <div class="price">₹300</div>
+      <button class="info-btn" onclick="showInfo('chicken-curry-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-curry-full-info">Homestyle chicken curry cooked with savory spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON MASALA WITH BONE FULL">
+      <h4>MUTTON MASALA WITH BONE FULL</h4>
+      <div class="price">₹340</div>
+      <button class="info-btn" onclick="showInfo('mutton-masala-with-bone-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-masala-with-bone-full-info">Hearty mutton masala served on-the-bone for deeper flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON CURRY WITH BONES FULL">
+      <h4>MUTTON CURRY WITH BONES FULL</h4>
+      <div class="price">₹340</div>
+      <button class="info-btn" onclick="showInfo('mutton-curry-with-bones-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-curry-with-bones-full-info">Traditional mutton curry slow-cooked on the bone.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="KADAI CHICKEN FULL">
+      <h4>KADAI CHICKEN FULL</h4>
+      <div class="price">₹310</div>
+      <button class="info-btn" onclick="showInfo('kadai-chicken-full-info')">More Info</button>
+      <div class="info-popup" id="kadai-chicken-full-info">Spiced wok-style chicken cooked with peppers and onions.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="KADAI MUTTON FULL">
+      <h4>KADAI MUTTON FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('kadai-mutton-full-info')">More Info</button>
+      <div class="info-popup" id="kadai-mutton-full-info">Robust kadai-style mutton with bold masala flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BUTER CHICKN BONELES">
+      <h4>BUTER CHICKN BONELES</h4>
+      <div class="price">₹340</div>
+      <button class="info-btn" onclick="showInfo('buter-chickn-boneles-info')">More Info</button>
+      <div class="info-popup" id="buter-chickn-boneles-info">Rich buttery chicken (as listed) prepared boneless.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BUTTER MUTTON FULL">
+      <h4>BUTTER MUTTON FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('butter-mutton-full-info')">More Info</button>
+      <div class="info-popup" id="butter-mutton-full-info">Creamy butter-style mutton curry with mellow spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ACHAR CHICKEN">
+      <h4>ACHAR CHICKEN</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('achar-chicken-info')">More Info</button>
+      <div class="info-popup" id="achar-chicken-info">Tangy achar-style chicken with pickled spice notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ACHAR MUTTON FULL">
+      <h4>ACHAR MUTTON FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('achar-mutton-full-info')">More Info</button>
+      <div class="info-popup" id="achar-mutton-full-info">Pickle-spiced mutton curry with bold, tangy flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SHAHI QHURA FULL">
+      <h4>CHICKEN SHAHI QHURA FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('chicken-shahi-qhura-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-shahi-qhura-full-info">Rich, royal-style chicken curry with creamy shahi gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON SHAHI QHURMA FULL">
+      <h4>MUTTON SHAHI QHURMA FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('mutton-shahi-qhurma-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-shahi-qhurma-full-info">Luxurious shahi-style mutton curry with fragrant spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUGHLAI CHICKEN FULL">
+      <h4>MUGHLAI CHICKEN FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('mughlai-chicken-full-info')">More Info</button>
+      <div class="info-popup" id="mughlai-chicken-full-info">Mughlai-style chicken curry — creamy, aromatic and rich.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUGHLAI MUTTON FULL">
+      <h4>MUGHLAI MUTTON FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('mughlai-mutton-full-info')">More Info</button>
+      <div class="info-popup" id="mughlai-mutton-full-info">Royal-style mutton cooked in Mughlai spices and gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ANDHRA CHICKEN FULL">
+      <h4>ANDHRA CHICKEN FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('andhra-chicken-full-info')">More Info</button>
+      <div class="info-popup" id="andhra-chicken-full-info">Spicy Andhra-style chicken curry with bold flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ANDHRA MUTTON FULL">
+      <h4>ANDHRA MUTTON FULL</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('andhra-mutton-full-info')">More Info</button>
+      <div class="info-popup" id="andhra-mutton-full-info">Hearty Andhra mutton curry with robust spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN TIKA MASLA FULL">
+      <h4>CHICKEN TIKA MASLA FULL</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('chicken-tika-masla-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-tika-masla-full-info">Tikka-style chicken cooked in a rich masala (as listed).</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON TIKKA MASALA FULL">
+      <h4>MUTTON TIKKA MASALA FULL</h4>
+      <div class="price">₹400</div>
+      <button class="info-btn" onclick="showInfo('mutton-tikka-masala-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-tikka-masala-full-info">Tikka masala made with tender mutton pieces and rich gravy.</div>
+    </div>
+
+    <!-- DAL -->
+     <div id="dal"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">DAL</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="DAL FRY">
+      <h4>DAL FRY</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('dal-fry-info')">More Info</button>
+      <div class="info-popup" id="dal-fry-info">Comforting spiced lentils tempered with ghee and aromatic spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="DAL TADKA">
+      <h4>DAL TADKA</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('dal-tadka-info')">More Info</button>
+      <div class="info-popup" id="dal-tadka-info">Lentils finished with a sizzling tadka of garlic, cumin and chillies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="DAL MAKHNI">
+      <h4>DAL MAKHNI</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('dal-makhni-info')">More Info</button>
+      <div class="info-popup" id="dal-makhni-info">Creamy, slow-cooked black lentils finished with butter and cream.</div>
+    </div>
+
+    <!-- INDIAN VEG-CURRIES -->
+     <div id="indianVegCurries"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 12px 0 6px;">Indian Veg-Curries</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER BUTTER MASALA">
+      <h4>PANEER BUTTER MASALA</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('paneer-butter-masala-info')">More Info</button>
+      <div class="info-popup" id="paneer-butter-masala-info">Soft paneer cubes in a creamy, buttery tomato-based gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PALAK PANEER">
+      <h4>PALAK PANEER</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('palak-paneer-info')">More Info</button>
+      <div class="info-popup" id="palak-paneer-info">Cubes of paneer simmered in a smooth spinach (palak) gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER SHAHI QHURMA">
+      <h4>PANEER SHAHI QHURMA</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('paneer-shahi-qhurma-info')">More Info</button>
+      <div class="info-popup" id="paneer-shahi-qhurma-info">Royal-style paneer curry with rich, creamy shahi spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GINGER PANEER">
+      <h4>GINGER PANEER</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('ginger-paneer-info')">More Info</button>
+      <div class="info-popup" id="ginger-paneer-info">Paneer cooked with fresh ginger for a warm, zesty flavour.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PLAIN PALAK">
+      <h4>PLAIN PALAK</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('plain-palak-info')">More Info</button>
+      <div class="info-popup" id="plain-palak-info">Simple spinach preparation, lightly seasoned—great with rotis.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUKHANWALA">
+      <h4>MUKHANWALA</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('mukhanwala-info')">More Info</button>
+      <div class="info-popup" id="mukhanwala-info">Chef-style rich vegetable curry (as listed).</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MIXED VEG CURRY">
+      <h4>MIXED VEG CURRY</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('mixed-veg-curry-info')">More Info</button>
+      <div class="info-popup" id="mixed-veg-curry-info">Seasonal vegetables cooked in a house masala gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHANA MASALA">
+      <h4>CHANA MASALA</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('chana-masala-info')">More Info</button>
+      <div class="info-popup" id="chana-masala-info">Tangy, spiced chickpea curry—classic and hearty.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NAVARATAN QHURMA">
+      <h4>NAVARATAN QHURMA</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('navaratan-qhurma-info')">More Info</button>
+      <div class="info-popup" id="navaratan-qhurma-info">Mixed veg korma with nuts and mild aromatic spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TOMATO CHUTNEY">
+      <h4>TOMATO CHUTNEY</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('tomato-chutney-info')">More Info</button>
+      <div class="info-popup" id="tomato-chutney-info">Tangy tomato-based chutney — great as a side accompaniment.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GOBI MASALA">
+      <h4>GOBI MASALA</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('gobi-masala-info')">More Info</button>
+      <div class="info-popup" id="gobi-masala-info">Cauliflower florets cooked in a spiced masala gravy.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="KADAI GOBI">
+      <h4>KADAI GOBI</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('kadai-gobi-info')">More Info</button>
+      <div class="info-popup" id="kadai-gobi-info">High-heat kadai-style cauliflower with peppers and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ALOO METHI">
+      <h4>ALOO METHI</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('aloo-methi-info')">More Info</button>
+      <div class="info-popup" id="aloo-methi-info">Potatoes and fenugreek leaves tempered with traditional spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ALOO GOBI METHI">
+      <h4>ALOO GOBI METHI</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('aloo-gobi-methi-info')">More Info</button>
+      <div class="info-popup" id="aloo-gobi-methi-info">Potato, cauliflower and methi cooked together with warm spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TOMATO METHI">
+      <h4>TOMATO METHI</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('tomato-methi-info')">More Info</button>
+      <div class="info-popup" id="tomato-methi-info">Tomato and fenugreek curry with tangy and herbaceous notes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG KADAI">
+      <h4>VEG KADAI</h4>
+      <div class="price">₹270</div>
+      <button class="info-btn" onclick="showInfo('veg-kadai-info')">More Info</button>
+      <div class="info-popup" id="veg-kadai-info">Mixed vegetables cooked in a robust kadai masala.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="S.H. SPL VEG CURRY">
+      <h4>S.H. SPL VEG CURRY</h4>
+      <div class="price">₹340</div>
+      <button class="info-btn" onclick="showInfo('sh-spl-veg-curry-info')">More Info</button>
+      <div class="info-popup" id="sh-spl-veg-curry-info">House special vegetarian curry — chef’s unique blend.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="KAJU CURRY">
+      <h4>KAJU CURRY</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('kaju-curry-info')">More Info</button>
+      <div class="info-popup" id="kaju-curry-info">Creamy cashew-based curry with mild spices and richness.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUSHROOM CURRY">
+      <h4>MUSHROOM CURRY</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('mushroom-curry-info')">More Info</button>
+      <div class="info-popup" id="mushroom-curry-info">Earthy mushrooms simmered in a flavorful curry gravy.</div>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- Tandoor section -->
+ <div id="nonVegTandoor"></div>
+
+<div class="menu-section" id="tandoor">
+  <div class="section-title">Tandoor</div>
+  <div class="menu-grid">
+
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Non-Veg Tandoor</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI CHICKEN">
+      <h4>TANDOORI CHICKEN</h4>
+      <div class="price">₹250 <span style="color:#ccc;">|</span> ₹450</div>
+      <button class="info-btn" onclick="showInfo('tandoori-chicken-info')">More Info</button>
+      <div class="info-popup" id="tandoori-chicken-info">Whole chicken marinated in yogurt and spices, grilled to perfection.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ALFAHAM CHICKEN">
+      <h4>ALFAHAM CHICKEN</h4>
+      <div class="price">₹250 <span style="color:#ccc;">|</span> ₹450</div>
+      <button class="info-btn" onclick="showInfo('alfaham-chicken-info')">More Info</button>
+      <div class="info-popup" id="alfaham-chicken-info">Middle Eastern style grilled chicken with unique spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GRILLED CHICKEN L">
+      <h4>GRILLED CHICKEN L</h4>
+      <div class="price">₹250 <span style="color:#ccc;">|</span> ₹450</div>
+      <button class="info-btn" onclick="showInfo('grilled-chicken-l-info')">More Info</button>
+      <div class="info-popup" id="grilled-chicken-l-info">Juicy grilled chicken with a smoky tandoor flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANGDI KABAB">
+      <h4>TANGDI KABAB</h4>
+      <div class="price">₹160 <span style="color:#ccc;">|</span> ₹300</div>
+      <button class="info-btn" onclick="showInfo('tangdi-kabab-info')">More Info</button>
+      <div class="info-popup" id="tangdi-kabab-info">Chicken drumsticks marinated in rich spices and grilled.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="QUALMI KABAB">
+      <h4>QUALMI KABAB</h4>
+      <div class="price">₹160 <span style="color:#ccc;">|</span> ₹300</div>
+      <button class="info-btn" onclick="showInfo('qualmi-kabab-info')">More Info</button>
+      <div class="info-popup" id="qualmi-kabab-info">Special spiced minced chicken kababs grilled in tandoor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="RESHMI KABAB">
+      <h4>RESHMI KABAB</h4>
+      <div class="price">₹200 <span style="color:#ccc;">|</span> ₹370</div>
+      <button class="info-btn" onclick="showInfo('reshmi-kabab-info')">More Info</button>
+      <div class="info-popup" id="reshmi-kabab-info">Soft, creamy chicken kababs with a silky texture.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN TIKKA">
+      <h4>CHICKEN TIKKA</h4>
+      <div class="price">₹200 <span style="color:#ccc;">|</span> ₹370</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-info">Tender chicken pieces marinated in tandoori spices and roasted.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GARLIC KABAB">
+      <h4>GARLIC KABAB</h4>
+      <div class="price">₹200 <span style="color:#ccc;">|</span> ₹370</div>
+      <button class="info-btn" onclick="showInfo('garlic-kabab-info')">More Info</button>
+      <div class="info-popup" id="garlic-kabab-info">Juicy kababs infused with rich garlic flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI PLATTER">
+      <h4>TANDOORI PLATTER</h4>
+      <div class="price">₹1500</div>
+      <button class="info-btn" onclick="showInfo('andoori-platter-info')">More Info</button>
+      <div class="info-popup" id="andoori-platter-info">A grand assortment of the finest tandoori specialties.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Teetar section -->
+ <div id="teetar"></div>
+
+<div class="menu-section" id="teetar">
+  <div class="section-title">Teetar</div>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TEETAR FRY">
+      <h4>TEETAR FRY</h4>
+      <div class="price">₹150 <span style="color:#ccc;">|</span> ₹280</div>
+      <button class="info-btn" onclick="showInfo('teetar-fry-info')">More Info</button>
+      <div class="info-popup" id="teetar-fry-info">Crispy fried teetar seasoned with aromatic spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI TEETAR">
+      <h4>TANDOORI TEETAR</h4>
+      <div class="price">₹150 <span style="color:#ccc;">|</span> ₹280</div>
+      <button class="info-btn" onclick="showInfo('tandoori-teetar-info')">More Info</button>
+      <div class="info-popup" id="tandoori-teetar-info">Teetar marinated in tandoori spices and grilled to perfection.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TEETAR SOUP">
+      <h4>TEETAR SOUP</h4>
+      <div class="price">₹150 <span style="color:#ccc;">|</span> ₹280</div>
+      <button class="info-btn" onclick="showInfo('teetar-soup-info')">More Info</button>
+      <div class="info-popup" id="teetar-soup-info">Warm and hearty teetar soup with rich flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TEETAR CURRY">
+      <h4>TEETAR CURRY</h4>
+      <div class="price">₹180 <span style="color:#ccc;">|</span> ₹310</div>
+      <button class="info-btn" onclick="showInfo('teetar-curry-info')">More Info</button>
+      <div class="info-popup" id="teetar-curry-info">Teetar cooked in a spicy, flavorful curry base.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TEETAR BIRYANI">
+      <h4>TEETAR BIRYANI</h4>
+      <div class="price">₹210 <span style="color:#ccc;">|</span> ₹380</div>
+      <button class="info-btn" onclick="showInfo('teetar-biryani-info')">More Info</button>
+      <div class="info-popup" id="teetar-biryani-info">Fragrant basmati rice cooked with spiced teetar pieces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TEETAR MANDI">
+      <h4>TEETAR MANDI</h4>
+      <div class="price">₹210 <span style="color:#ccc;">|</span> ₹380</div>
+      <button class="info-btn" onclick="showInfo('teetar-mandi-info')">More Info</button>
+      <div class="info-popup" id="teetar-mandi-info">Traditional Arabian mandi rice served with tender teetar.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Natu Kodi section -->
+ <div id="natuKodi"></div>
+
+<div class="menu-section" id="natu-kodi">
+  <div class="section-title">Natu Kodi</div>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NATU KODI FRY">
+      <h4>NATU KODI FRY</h4>
+      <div class="price">₹430 <span style="color:#ccc;">|</span> ₹830</div>
+      <button class="info-btn" onclick="showInfo('natu-kodi-fry-info')">More Info</button>
+      <div class="info-popup" id="natu-kodi-fry-info">Crispy fried country chicken with authentic spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI NATU KODI">
+      <h4>TANDOORI NATU KODI</h4>
+      <div class="price">₹430 <span style="color:#ccc;">|</span> ₹830</div>
+      <button class="info-btn" onclick="showInfo('tandoori-natu-kodi-info')">More Info</button>
+      <div class="info-popup" id="tandoori-natu-kodi-info">Country chicken marinated in tandoori masala and grilled to perfection.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GRILLED NATU KODI">
+      <h4>GRILLED NATU KODI</h4>
+      <div class="price">₹430 <span style="color:#ccc;">|</span> ₹830</div>
+      <button class="info-btn" onclick="showInfo('grilled-natu-kodi-info')">More Info</button>
+      <div class="info-popup" id="grilled-natu-kodi-info">Juicy grilled country chicken with smoky flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NATU KODI CURRY">
+      <h4>NATU KODI CURRY</h4>
+      <div class="price">₹580 <span style="color:#ccc;">|</span> ₹1000</div>
+      <button class="info-btn" onclick="showInfo('natu-kodi-curry-info')">More Info</button>
+      <div class="info-popup" id="natu-kodi-curry-info">Traditional spicy curry made with tender country chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NATU KODI BIRYANI">
+      <h4>NATU KODI BIRYANI</h4>
+      <div class="price">₹280 <span style="color:#ccc;">|</span> ₹450</div>
+      <button class="info-btn" onclick="showInfo('natu-kodi-biryani-info')">More Info</button>
+      <div class="info-popup" id="natu-kodi-biryani-info">Aromatic biryani made with flavorful country chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NATU KODI MANDI">
+      <h4>NATU KODI MANDI</h4>
+      <div class="price">₹280 <span style="color:#ccc;">|</span> ₹450</div>
+      <button class="info-btn" onclick="showInfo('natu-kodi-mandi-info')">More Info</button>
+      <div class="info-popup" id="natu-kodi-mandi-info">Traditional mandi rice served with succulent country chicken.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Special Snacks section -->
+ <div id="splSnacks"></div>
+
+<div class="menu-section" id="special-snacks">
+  <div class="section-title">Special Snacks</div>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON CHOPS 4PCS">
+      <h4>MUTTON CHOPS 4PCS</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('mutton-chops-4pcs-info')">More Info</button>
+      <div class="info-popup" id="mutton-chops-4pcs-info">Tender mutton chops, perfectly seasoned and grilled.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON CHOPS 8PCS">
+      <h4>MUTTON CHOPS 8PCS</h4>
+      <div class="price">₹630</div>
+      <button class="info-btn" onclick="showInfo('mutton-chops-8pcs-info')">More Info</button>
+      <div class="info-popup" id="mutton-chops-8pcs-info">Generous portion of 8 tender grilled mutton chops.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ROASTED CHICKEN">
+      <h4>ROASTED CHICKEN</h4>
+      <div class="price">₹330</div>
+      <button class="info-btn" onclick="showInfo('roasted-chicken-info')">More Info</button>
+      <div class="info-popup" id="roasted-chicken-info">Juicy whole chicken roasted with herbs and spices.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="menu-section" id="indian-bread">
+  <div class="section-title">Indian Bread</div>
+  <div class="menu-grid">
+
+    <!-- Rotis -->
+     <div id="rotis"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Rotis</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI ROTI">
+      <h4>TANDOORI ROTI</h4>
+      <div class="price">₹25</div>
+      <button class="info-btn" onclick="showInfo('tandoori-roti-info')">More Info</button>
+      <div class="info-popup" id="tandoori-roti-info">Traditional tandoor-baked roti.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BUTTER ROTI">
+      <h4>BUTTER ROTI</h4>
+      <div class="price">₹40</div>
+      <button class="info-btn" onclick="showInfo('butter-roti-info')">More Info</button>
+      <div class="info-popup" id="butter-roti-info">Soft roti with a layer of melted butter.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TILL ROTI">
+      <h4>TILL ROTI</h4>
+      <div class="price">₹40</div>
+      <button class="info-btn" onclick="showInfo('till-roti-info')">More Info</button>
+      <div class="info-popup" id="till-roti-info">Roti topped with sesame seeds for extra flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GARLIC ROTI">
+      <h4>GARLIC ROTI</h4>
+      <div class="price">₹40</div>
+      <button class="info-btn" onclick="showInfo('garlic-roti-info')">More Info</button>
+      <div class="info-popup" id="garlic-roti-info">Roti infused with fresh garlic flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="RUMALI ROTI">
+      <h4>RUMALI ROTI</h4>
+      <div class="price">₹35</div>
+      <button class="info-btn" onclick="showInfo('rumali-roti-info')">More Info</button>
+      <div class="info-popup" id="rumali-roti-info">Thin and soft handkerchief-style roti.</div>
+    </div>
+
+    <!-- Naan -->
+     <div id="naan"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Naan</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BUTTER NAAN">
+      <h4>BUTTER NAAN</h4>
+      <div class="price">₹60</div>
+      <button class="info-btn" onclick="showInfo('butter-naan-info')">More Info</button>
+      <div class="info-popup" id="butter-naan-info">Soft naan brushed with butter.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PLAIN NAAN">
+      <h4>PLAIN NAAN</h4>
+      <div class="price">₹50</div>
+      <button class="info-btn" onclick="showInfo('plain-naan-info')">More Info</button>
+      <div class="info-popup" id="plain-naan-info">Classic tandoor-baked naan.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GARLIC NAAN">
+      <h4>GARLIC NAAN</h4>
+      <div class="price">₹70</div>
+      <button class="info-btn" onclick="showInfo('garlic-naan-info')">More Info</button>
+      <div class="info-popup" id="garlic-naan-info">Naan topped with garlic for a rich aroma.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="KASHMIRI NAAN">
+      <h4>KASHMIRI NAAN</h4>
+      <div class="price">₹70</div>
+      <button class="info-btn" onclick="showInfo('kashmiri-naan-info')">More Info</button>
+      <div class="info-popup" id="kashmiri-naan-info">Sweet naan stuffed with dry fruits.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="BABY NAAN">
+      <h4>BABY NAAN</h4>
+      <div class="price">₹60</div>
+      <button class="info-btn" onclick="showInfo('baby-naan-info')">More Info</button>
+      <div class="info-popup" id="baby-naan-info">Mini version of the classic naan.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="STUFFED NAAN">
+      <h4>STUFFED NAAN</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('stuffed-naan-info')">More Info</button>
+      <div class="info-popup" id="stuffed-naan-info">Naan stuffed with seasoned fillings.</div>
+    </div>
+
+    <!-- Parathas -->
+     <div id="parathas"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Parathas</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TANDOORI PARATHA">
+      <h4>TANDOORI PARATHA</h4>
+      <div class="price">₹60</div>
+      <button class="info-btn" onclick="showInfo('tandoori-paratha-info')">More Info</button>
+      <div class="info-popup" id="tandoori-paratha-info">Paratha baked in a traditional tandoor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PLAIN PARATHA">
+      <h4>PLAIN PARATHA</h4>
+      <div class="price">₹50</div>
+      <button class="info-btn" onclick="showInfo('plain-paratha-info')">More Info</button>
+      <div class="info-popup" id="plain-paratha-info">Simple and flaky paratha.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="WHEAT PARATHA">
+      <h4>WHEAT PARATHA</h4>
+      <div class="price">₹60</div>
+      <button class="info-btn" onclick="showInfo('wheat-paratha-info')">More Info</button>
+      <div class="info-popup" id="wheat-paratha-info">Healthy paratha made from whole wheat flour.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ALOO PARATHA">
+      <h4>ALOO PARATHA</h4>
+      <div class="price">₹60</div>
+      <button class="info-btn" onclick="showInfo('aloo-paratha-info')">More Info</button>
+      <div class="info-popup" id="aloo-paratha-info">Stuffed with spiced mashed potatoes.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GOBI PARATHA">
+      <h4>GOBI PARATHA</h4>
+      <div class="price">₹70</div>
+      <button class="info-btn" onclick="showInfo('gobi-paratha-info')">More Info</button>
+      <div class="info-popup" id="gobi-paratha-info">Stuffed with spiced cauliflower.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER PARATHA">
+      <h4>PANEER PARATHA</h4>
+      <div class="price">₹100</div>
+      <button class="info-btn" onclick="showInfo('paneer-paratha-info')">More Info</button>
+      <div class="info-popup" id="paneer-paratha-info">Stuffed with seasoned cottage cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN PARATHA">
+      <h4>CHICKEN PARATHA</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('chicken-paratha-info')">More Info</button>
+      <div class="info-popup" id="chicken-paratha-info">Paratha stuffed with minced chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON PARATHA">
+      <h4>MUTTON PARATHA</h4>
+      <div class="price">₹140</div>
+      <button class="info-btn" onclick="showInfo('mutton-paratha-info')">More Info</button>
+      <div class="info-popup" id="mutton-paratha-info">Paratha stuffed with spiced minced mutton.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="GARLIC PARATHA">
+      <h4>GARLIC PARATHA</h4>
+      <div class="price">₹70</div>
+      <button class="info-btn" onclick="showInfo('garlic-paratha-info')">More Info</button>
+      <div class="info-popup" id="garlic-paratha-info">Paratha infused with garlic flavor.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA PARATHA">
+      <h4>MASALA PARATHA</h4>
+      <div class="price">₹90</div>
+      <button class="info-btn" onclick="showInfo('masala-paratha-info')">More Info</button>
+      <div class="info-popup" id="masala-paratha-info">Paratha with spiced stuffing.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MASALA KULCHA">
+      <h4>MASALA KULCHA</h4>
+      <div class="price">₹90</div>
+      <button class="info-btn" onclick="showInfo('masala-kulcha-info')">More Info</button>
+      <div class="info-popup" id="masala-kulcha-info">Soft kulcha stuffed with seasoned spices.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Biriyani-->
+<div id="biriyani"></div>
+
+<div class="menu-section" id="biryani">
+  <div class="section-title">Biryani</div>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON KHEEMA BIRYANI FULL">
+      <h4>MUTTON KHEEMA BIRYANI FULL</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('mutton-kheema-biryani-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-kheema-biryani-full-info">Flavorful mutton kheema cooked with aromatic biryani spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON KHEEMA BIRYANI HALF">
+      <h4>MUTTON KHEEMA BIRYANI HALF</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('mutton-kheema-biryani-half-info')">More Info</button>
+      <div class="info-popup" id="mutton-kheema-biryani-half-info">Half portion of our delicious mutton kheema biryani.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON BIRYANI HALF">
+      <h4>MUTTON BIRYANI HALF</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('mutton-biryani-half-info')">More Info</button>
+      <div class="info-popup" id="mutton-biryani-half-info">Half portion of mutton biryani cooked with fragrant rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON BIRYANI FULL">
+      <h4>MUTTON BIRYANI FULL</h4>
+      <div class="price">₹340</div>
+      <button class="info-btn" onclick="showInfo('mutton-biryani-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-biryani-full-info">Full serving of mutton biryani cooked to perfection.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON SPL BIRYANI">
+      <h4>MUTTON SPL BIRYANI</h4>
+      <div class="price">₹420</div>
+      <button class="info-btn" onclick="showInfo('mutton-spl-biryani-info')">More Info</button>
+      <div class="info-popup" id="mutton-spl-biryani-info">Special mutton biryani with extra spices and flavors.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON FAMILY PACK">
+      <h4>MUTTON FAMILY PACK</h4>
+      <div class="price">₹950</div>
+      <button class="info-btn" onclick="showInfo('mutton-family-pack-info')">More Info</button>
+      <div class="info-popup" id="mutton-family-pack-info">Family pack serving of our mutton biryani.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON JUMBO PACK">
+      <h4>MUTTON JUMBO PACK</h4>
+      <div class="price">₹1200</div>
+      <button class="info-btn" onclick="showInfo('mutton-jumbo-pack-info')">More Info</button>
+      <div class="info-popup" id="mutton-jumbo-pack-info">Jumbo size mutton biryani for large gatherings.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN BIRYANI FULL">
+      <h4>CHICKEN BIRYANI FULL</h4>
+      <div class="price">₹320</div>
+      <button class="info-btn" onclick="showInfo('chicken-biryani-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-biryani-full-info">Full serving of chicken biryani made with tender chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN BIRYANI HALF">
+      <h4>CHICKEN BIRYANI HALF</h4>
+      <div class="price">₹200</div>
+      <button class="info-btn" onclick="showInfo('chicken-biryani-half-info')">More Info</button>
+      <div class="info-popup" id="chicken-biryani-half-info">Half serving of chicken biryani with aromatic spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN SPL BIRYANI">
+      <h4>CHICKEN SPL BIRYANI</h4>
+      <div class="price">₹400</div>
+      <button class="info-btn" onclick="showInfo('chicken-spl-biryani-info')">More Info</button>
+      <div class="info-popup" id="chicken-spl-biryani-info">Special chicken biryani for extra flavor lovers.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN FAMILY PACK">
+      <h4>CHICKEN FAMILY PACK</h4>
+      <div class="price">₹900</div>
+      <button class="info-btn" onclick="showInfo('chicken-family-pack-info')">More Info</button>
+      <div class="info-popup" id="chicken-family-pack-info">Large family pack chicken biryani.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN JUMBO PACK">
+      <h4>CHICKEN JUMBO PACK</h4>
+      <div class="price">₹1100</div>
+      <button class="info-btn" onclick="showInfo('chicken-jumbo-pack-info')">More Info</button>
+      <div class="info-popup" id="chicken-jumbo-pack-info">Jumbo chicken biryani pack for gatherings.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS BIRYANI">
+      <h4>PRAWNS BIRYANI</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('prawns-biryani-info')">More Info</button>
+      <div class="info-popup" id="prawns-biryani-info">Fresh prawns cooked in biryani style.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH BIRYANI">
+      <h4>FISH BIRYANI</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('fish-biryani-info')">More Info</button>
+      <div class="info-popup" id="fish-biryani-info">Biryani cooked with fresh fish and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="EGG BIRYANI">
+      <h4>EGG BIRYANI</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('egg-biryani-info')">More Info</button>
+      <div class="info-popup" id="egg-biryani-info">Boiled eggs in a spiced biryani preparation.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="VEG BIRYANI">
+      <h4>VEG BIRYANI</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('veg-biryani-info')">More Info</button>
+      <div class="info-popup" id="veg-biryani-info">Biryani with fresh seasonal vegetables.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NALLI BIRYANI HALF">
+      <h4>NALLI BIRYANI HALF</h4>
+      <div class="price">₹280</div>
+      <button class="info-btn" onclick="showInfo('nalli-biryani-half-info')">More Info</button>
+      <div class="info-popup" id="nalli-biryani-half-info">Half portion of rich and flavorful nalli biryani.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="NALLI BIRYANI FULL">
+      <h4>NALLI BIRYANI FULL</h4>
+      <div class="price">₹470</div>
+      <button class="info-btn" onclick="showInfo('nalli-biryani-full-info')">More Info</button>
+      <div class="info-popup" id="nalli-biryani-full-info">Full portion of nalli biryani cooked with tender mutton shanks.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN TIKKA BIRYANI HALF">
+      <h4>CHICKEN TIKKA BIRYANI HALF</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-biryani-half-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-biryani-half-info">Half serving of chicken tikka biryani.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN TIKKA BIRYANI FULL">
+      <h4>CHICKEN TIKKA BIRYANI FULL</h4>
+      <div class="price">₹370</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-biryani-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-biryani-full-info">Full serving of chicken tikka biryani.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER BIRYANI">
+      <h4>PANEER BIRYANI</h4>
+      <div class="price">₹200</div>
+      <button class="info-btn" onclick="showInfo('paneer-biryani-info')">More Info</button>
+      <div class="info-popup" id="paneer-biryani-info">Biryani with cubes of paneer cooked in spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PANEER TIKKA BIRYANI">
+      <h4>PANEER TIKKA BIRYANI</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('paneer-tikka-biryani-info')">More Info</button>
+      <div class="info-popup" id="paneer-tikka-biryani-info">Paneer tikka cooked with biryani rice and spices.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Arabian Mandi section -->
+ <div id="arabianMandi"></div>
+
+<div class="menu-section" id="arabian-mandi">
+  <div class="section-title">Arabian Mandi</div>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON MANDI FULL (2 PC)">
+      <h4>MUTTON MANDI FULL (2 PC)</h4>
+      <div class="price">₹680</div>
+      <button class="info-btn" onclick="showInfo('mutton-mandi-full-info')">More Info</button>
+      <div class="info-popup" id="mutton-mandi-full-info">Tender mutton served with aromatic mandi rice and spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON MANDI HALF (1 PC)">
+      <h4>MUTTON MANDI HALF (1 PC)</h4>
+      <div class="price">₹380</div>
+      <button class="info-btn" onclick="showInfo('mutton-mandi-half-info')">More Info</button>
+      <div class="info-popup" id="mutton-mandi-half-info">A smaller portion of mutton mandi perfect for light appetites.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MUTTON MANDI FAMILY PACK">
+      <h4>MUTTON MANDI FAMILY PACK</h4>
+      <div class="price">₹1300</div>
+      <button class="info-btn" onclick="showInfo('mutton-mandi-family-info')">More Info</button>
+      <div class="info-popup" id="mutton-mandi-family-info">Family-sized serving of mutton mandi for sharing.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MANDI FULL (2 PC)">
+      <h4>CHICKEN MANDI FULL (2 PC)</h4>
+      <div class="price">₹380</div>
+      <button class="info-btn" onclick="showInfo('chicken-mandi-full-info')">More Info</button>
+      <div class="info-popup" id="chicken-mandi-full-info">Juicy chicken pieces served with fragrant mandi rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MANDI HALF (1 PC)">
+      <h4>CHICKEN MANDI HALF (1 PC)</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('chicken-mandi-half-info')">More Info</button>
+      <div class="info-popup" id="chicken-mandi-half-info">A lighter portion of chicken mandi for a smaller meal.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="CHICKEN MANDI FAMILY PACK">
+      <h4>CHICKEN MANDI FAMILY PACK</h4>
+      <div class="price">₹800</div>
+      <button class="info-btn" onclick="showInfo('chicken-mandi-family-info')">More Info</button>
+      <div class="info-popup" id="chicken-mandi-family-info">Family-sized portion of chicken mandi for group dining.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH MANDI FULL (2 PC)">
+      <h4>FISH MANDI FULL (2 PC)</h4>
+      <div class="price">₹650</div>
+      <button class="info-btn" onclick="showInfo('fish-mandi-full-info')">More Info</button>
+      <div class="info-popup" id="fish-mandi-full-info">Fresh fish fillets with traditional mandi spices and rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH MANDI HALF (1 PC)">
+      <h4>FISH MANDI HALF (1 PC)</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('fish-mandi-half-info')">More Info</button>
+      <div class="info-popup" id="fish-mandi-half-info">A smaller serving of fish mandi for lighter appetites.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="FISH MANDI FAMILY PACK">
+      <h4>FISH MANDI FAMILY PACK</h4>
+      <div class="price">₹1100</div>
+      <button class="info-btn" onclick="showInfo('fish-mandi-family-info')">More Info</button>
+      <div class="info-popup" id="fish-mandi-family-info">Generous family portion of fish mandi for sharing.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS MANDI FULL">
+      <h4>PRAWNS MANDI FULL</h4>
+      <div class="price">₹650</div>
+      <button class="info-btn" onclick="showInfo('prawns-mandi-full-info')">More Info</button>
+      <div class="info-popup" id="prawns-mandi-full-info">Succulent prawns served with traditional mandi rice.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS MANDI HALF">
+      <h4>PRAWNS MANDI HALF</h4>
+      <div class="price">₹350</div>
+      <button class="info-btn" onclick="showInfo('prawns-mandi-half-info')">More Info</button>
+      <div class="info-popup" id="prawns-mandi-half-info">Half portion of prawns mandi for lighter dining.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="PRAWNS MANDI FAMILY PACK">
+      <h4>PRAWNS MANDI FAMILY PACK</h4>
+      <div class="price">₹1100</div>
+      <button class="info-btn" onclick="showInfo('prawns-mandi-family-info')">More Info</button>
+      <div class="info-popup" id="prawns-mandi-family-info">Family-sized serving of prawns mandi for group meals.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="MIX MANDI">
+      <h4>MIX MANDI</h4>
+      <div class="price">₹1600</div>
+      <button class="info-btn" onclick="showInfo('mix-mandi-info')">More Info</button>
+      <div class="info-popup" id="mix-mandi-info">A combination of mutton, chicken, fish, and prawns with mandi rice.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Pizza, Burger & Sandwich section -->
+<div class="menu-section" id="pizza-burger-sandwich">
+  <div class="section-title">Pizza, Burgers & Sandwiches</div>
+  <div class="menu-grid">
+
+    <!-- Veg Pizza -->
+     <div id="vegPizza"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Veg Pizza</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Cheese Pizza">
+      <h4>VEG CHEESE PIZZA</h4>
+      <div class="price">₹200</div>
+      <button class="info-btn" onclick="showInfo('veg-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="veg-cheese-pizza-info">Classic veg pizza topped with rich cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Mexican Cheese Pizza">
+      <h4>VEG MEXICAN CHEESE PIZZA</h4>
+      <div class="price">₹210</div>
+      <button class="info-btn" onclick="showInfo('veg-mexican-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="veg-mexican-cheese-pizza-info">Spicy Mexican-style veg pizza with cheesy goodness.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Mushroom Cheese Pizza">
+      <h4>MUSHROOM CHEESE PIZZA</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('mushroom-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="mushroom-cheese-pizza-info">Fresh mushrooms and cheese on a soft pizza base.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Paneer Cheese Pizza">
+      <h4>PANEER CHEESE PIZZA</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('paneer-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="paneer-cheese-pizza-info">Chunks of paneer with creamy cheese topping.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Cheese Pizza">
+      <h4>CHEESE PIZZA</h4>
+      <div class="price">₹220</div>
+      <button class="info-btn" onclick="showInfo('cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="cheese-pizza-info">Simple, cheesy, and delicious pizza for cheese lovers.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Onion Capsicum Cheese Overloaded Pizza">
+      <h4>ONION CAPSICUM CHEESE OVERLOADED PIZZA</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('onion-capsicum-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="onion-capsicum-cheese-pizza-info">Loaded with onion, capsicum, and extra cheese.</div>
+    </div>
+
+    <!-- Veg Burger -->
+     <div id="vegBurger"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Veg Burger</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Burger">
+      <h4>VEG BURGER</h4>
+      <div class="price">₹100</div>
+      <button class="info-btn" onclick="showInfo('veg-burger-info')">More Info</button>
+      <div class="info-popup" id="veg-burger-info">Fresh vegetable patty with lettuce and sauces in a soft bun.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Cheese Burger">
+      <h4>VEG CHEESE BURGER</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('veg-cheese-burger-info')">More Info</button>
+      <div class="info-popup" id="veg-cheese-burger-info">Veg patty with melted cheese and fresh veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Mexican Burger">
+      <h4>VEG MEXICAN BURGER</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('veg-mexican-burger-info')">More Info</button>
+      <div class="info-popup" id="veg-mexican-burger-info">Spicy Mexican-style veg patty with sauces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Paneer Burger">
+      <h4>PANEER BURGER</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('paneer-burger-info')">More Info</button>
+      <div class="info-popup" id="paneer-burger-info">Soft bun with paneer patty and creamy sauces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Mushroom Burger">
+      <h4>MUSHROOM BURGER</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('mushroom-burger-info')">More Info</button>
+      <div class="info-popup" id="mushroom-burger-info">Mushroom patty with cheese and fresh toppings.</div>
+    </div>
+
+    <!-- Veg Sandwich -->
+     <div id="vegSandwich"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Veg Sandwich</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Sandwich (Fresh Vegetable)">
+      <h4>VEG SANDWICH (FRESH VEGETABLE)</h4>
+      <div class="price">₹90</div>
+      <button class="info-btn" onclick="showInfo('veg-sandwich-info')">More Info</button>
+      <div class="info-popup" id="veg-sandwich-info">Fresh veggies layered in soft bread with light dressing.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Cheese Sandwich">
+      <h4>VEG CHEESE SANDWICH</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('veg-cheese-sandwich-info')">More Info</button>
+      <div class="info-popup" id="veg-cheese-sandwich-info">Vegetables and melted cheese inside toasted bread.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Mayo Cheese Sandwich">
+      <h4>VEG MAYO CHEESE SANDWICH</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('veg-mayo-cheese-sandwich-info')">More Info</button>
+      <div class="info-popup" id="veg-mayo-cheese-sandwich-info">Veggies mixed with mayo and cheese in bread slices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Cheese Club Sandwich">
+      <h4>VEG CHEESE CLUB SANDWICH</h4>
+      <div class="price">₹110</div>
+      <button class="info-btn" onclick="showInfo('veg-cheese-club-sandwich-info')">More Info</button>
+      <div class="info-popup" id="veg-cheese-club-sandwich-info">Multi-layer sandwich with veggies and cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Bread Butter">
+      <h4>BREAD BUTTER</h4>
+      <div class="price">₹70</div>
+      <button class="info-btn" onclick="showInfo('bread-butter-info')">More Info</button>
+      <div class="info-popup" id="bread-butter-info">Soft bread slices spread with creamy butter.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Bun Muska">
+      <h4>BUN MUSKA</h4>
+      <div class="price">₹70</div>
+      <button class="info-btn" onclick="showInfo('bun-muska-info')">More Info</button>
+      <div class="info-popup" id="bun-muska-info">Soft bun with butter, a classic tea-time snack.</div>
+    </div>
+
+    <!-- Veg Grilled Sandwich -->
+     <div id="vegGrilledSandwich"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Veg Grilled Sandwich</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Cheese Grill">
+      <h4>VEG CHEESE GRILL</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('veg-cheese-grill-info')">More Info</button>
+      <div class="info-popup" id="veg-cheese-grill-info">Toasted sandwich with vegetables and cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Mexican Grill">
+      <h4>VEG MEXICAN GRILL</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('veg-mexican-grill-info')">More Info</button>
+      <div class="info-popup" id="veg-mexican-grill-info">Grilled sandwich with Mexican spices and veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Cheese Mexican Grill">
+      <h4>VEG CHEESE MEXICAN GRILL</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('veg-cheese-mexican-grill-info')">More Info</button>
+      <div class="info-popup" id="veg-cheese-mexican-grill-info">Mexican-style grilled sandwich with cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Mushroom Grill">
+      <h4>MUSHROOM GRILL</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('mushroom-grill-info')">More Info</button>
+      <div class="info-popup" id="mushroom-grill-info">Grilled sandwich with mushrooms and cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Paneer Grill">
+      <h4>PANEER GRILL</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('paneer-grill-info')">More Info</button>
+      <div class="info-popup" id="paneer-grill-info">Paneer-filled grilled sandwich with spices.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Chicken Pizza, Burgers, Sandwiches & Shawarma section -->
+<div class="menu-section" id="chicken-items">
+  <div class="section-title">Chicken Items</div>
+  <div class="menu-grid">
+
+    <!-- Chicken Pizza -->
+     <div id="chickenPizza"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Chicken Pizza</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Cheese Pizza">
+      <h4>CHICKEN CHEESE PIZZA</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('chicken-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="chicken-cheese-pizza-info">Chicken chunks with extra cheese topping on a fresh pizza base.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Mexican Pizza">
+      <h4>CHICKEN MEXICAN PIZZA</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('chicken-mexican-pizza-info')">More Info</button>
+      <div class="info-popup" id="chicken-mexican-pizza-info">Spicy Mexican-flavored chicken with cheese and veggies.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tandoori Pizza">
+      <h4>CHICKEN TANDOORI PIZZA</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('chicken-tandoori-pizza-info')">More Info</button>
+      <div class="info-popup" id="chicken-tandoori-pizza-info">Tandoori spiced chicken on a cheesy pizza base.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tikka Pizza">
+      <h4>CHICKEN TIKKA PIZZA</h4>
+      <div class="price">₹230</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-pizza-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-pizza-info">Pizza topped with juicy chicken tikka and cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Italian Cheese Pizza">
+      <h4>CHICKEN ITALIAN CHEESE PIZZA</h4>
+      <div class="price">₹240</div>
+      <button class="info-btn" onclick="showInfo('chicken-italian-cheese-pizza-info')">More Info</button>
+      <div class="info-popup" id="chicken-italian-cheese-pizza-info">Italian-style pizza with chicken and rich cheese blend.</div>
+    </div>
+
+    <!-- Chicken Burger -->
+     <div id="chickenBurger"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Chicken Burger</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Burger">
+      <h4>CHICKEN BURGER</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('chicken-burger-info')">More Info</button>
+      <div class="info-popup" id="chicken-burger-info">Crispy chicken patty with lettuce and mayo in a bun.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tikka Burger">
+      <h4>CHICKEN TIKKA BURGER</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-burger-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-burger-info">Spicy chicken tikka patty with fresh vegetables and sauces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Spicy Mexican Burger">
+      <h4>CHICKEN SPICY MEXICAN BURGER</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('chicken-spicy-mexican-burger-info')">More Info</button>
+      <div class="info-popup" id="chicken-spicy-mexican-burger-info">Hot and spicy Mexican chicken burger with cheese.</div>
+    </div>
+
+    <!-- Chicken Grill Sandwich -->
+     <div id="chickenGrilledSandwich"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Chicken Grill Sandwich</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Cheese Grill Sandwich">
+      <h4>CHICKEN CHEESE GRILL SANDWICH</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('chicken-cheese-grill-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-cheese-grill-sandwich-info">Grilled sandwich with chicken and melted cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tandoori Grill Sandwich">
+      <h4>CHICKEN TANDOORI GRILL SANDWICH</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('chicken-tandoori-grill-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-tandoori-grill-sandwich-info">Grilled sandwich with tandoori-spiced chicken filling.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tikka Grill Sandwich">
+      <h4>CHICKEN TIKKA GRILL SANDWICH</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-grill-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-grill-sandwich-info">Grilled sandwich filled with chicken tikka and cheese.</div>
+    </div>
+
+    <!-- Chicken Sandwich -->
+     <div id="chickenSandwich"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Chicken Sandwich</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Club Sandwich">
+      <h4>CHICKEN CLUB SANDWICH</h4>
+      <div class="price">₹140</div>
+      <button class="info-btn" onclick="showInfo('chicken-club-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-club-sandwich-info">Multi-layer sandwich with chicken, lettuce, and sauces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Cheese Sandwich">
+      <h4>CHICKEN CHEESE SANDWICH</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('chicken-cheese-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-cheese-sandwich-info">Sandwich filled with chicken and melted cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tandoori Sandwich">
+      <h4>CHICKEN TANDOORI SANDWICH</h4>
+      <div class="price">₹160</div>
+      <button class="info-btn" onclick="showInfo('chicken-tandoori-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-tandoori-sandwich-info">Chicken sandwich with tandoori spices.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Tikka Sandwich">
+      <h4>CHICKEN TIKKA SANDWICH</h4>
+      <div class="price">₹160</div>
+      <button class="info-btn" onclick="showInfo('chicken-tikka-sandwich-info')">More Info</button>
+      <div class="info-popup" id="chicken-tikka-sandwich-info">Chicken tikka stuffed between fresh bread slices.</div>
+    </div>
+
+    <!-- Shawarma -->
+     <div id="shawarma"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Shawarma</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SPL Shawarma">
+      <h4>SPL SHAWARMA</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('spl-shawarma-info')">More Info</button>
+      <div class="info-popup" id="spl-shawarma-info">Specially seasoned shawarma wrap with tender chicken.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Regular Salad Shawarma">
+      <h4>REGULAR SALAD SHAWARMA</h4>
+      <div class="price">₹130</div>
+      <button class="info-btn" onclick="showInfo('regular-salad-shawarma-info')">More Info</button>
+      <div class="info-popup" id="regular-salad-shawarma-info">Shawarma wrap with fresh salad toppings.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Veg Manchuria Shawarma">
+      <h4>VEG MANCHURIA SHAWARMA</h4>
+      <div class="price">₹160</div>
+      <button class="info-btn" onclick="showInfo('veg-manchuria-shawarma-info')">More Info</button>
+      <div class="info-popup" id="veg-manchuria-shawarma-info">Unique veg manchuria filling in shawarma bread.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken 65 Shawarma">
+      <h4>CHICKEN 65 SHAWARMA</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('chicken-65-shawarma-info')">More Info</button>
+      <div class="info-popup" id="chicken-65-shawarma-info">Shawarma filled with spicy chicken 65 pieces.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Chicken Cheese Shawarma">
+      <h4>CHICKEN CHEESE SHAWARMA</h4>
+      <div class="price">₹180</div>
+      <button class="info-btn" onclick="showInfo('chicken-cheese-shawarma-info')">More Info</button>
+      <div class="info-popup" id="chicken-cheese-shawarma-info">Shawarma stuffed with chicken and melted cheese.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="Paneer 65 Shawarma">
+      <h4>PANEER 65 SHAWARMA</h4>
+      <div class="price">₹170</div>
+      <button class="info-btn" onclick="showInfo('paneer-65-shawarma-info')">More Info</button>
+      <div class="info-popup" id="paneer-65-shawarma-info">Shawarma with spicy paneer 65 filling.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Beverages & Desserts Section -->
+ <div id="beverages"></div>
+
+<div class="menu-section" id="beverages-desserts">
+  <div class="section-title">Beverages & Desserts</div>
+  <div class="menu-grid">
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Beverages</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="TEA">
+      <h4>TEA</h4>
+      <div class="price">₹30</div>
+      <button class="info-btn" onclick="showInfo('tea-info')">More Info</button>
+      <div class="info-popup" id="tea-info">Hot and refreshing tea made with premium leaves.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="COFFEE">
+      <h4>COFFEE</h4>
+      <div class="price">₹40</div>
+      <button class="info-btn" onclick="showInfo('coffee-info')">More Info</button>
+      <div class="info-popup" id="coffee-info">Freshly brewed coffee with rich aroma and taste.</div>
+    </div>
+
+    <!--Cool Drinks-->
+    <div id="coolDrinks"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Cool Drinks</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="200ML COOL DRINK">
+      <h4>200ML COOL DRINK</h4>
+      <div class="price">As per MRP</div>
+      <button class="info-btn" onclick="showInfo('200ml-cooldrink-info')">More Info</button>
+      <div class="info-popup" id="200ml-cooldrink-info">Chilled soft drink, perfect for a quick refreshment.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="500ML COOL DRINK">
+      <h4>500ML COOL DRINK</h4>
+      <div class="price">As per MRP</div>
+      <button class="info-btn" onclick="showInfo('500ml-cooldrink-info')">More Info</button>
+      <div class="info-popup" id="500ml-cooldrink-info">Half-liter soft drink to quench your thirst.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="1 LTR COOL DRINK">
+      <h4>1 LTR COOL DRINK</h4>
+      <div class="price">As per MRP</div>
+      <button class="info-btn" onclick="showInfo('1ltr-cooldrink-info')">More Info</button>
+      <div class="info-popup" id="1ltr-cooldrink-info">One-liter soft drink, ideal for sharing.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="2 LTR COOL DRINK">
+      <h4>2 LTR COOL DRINK</h4>
+      <div class="price">As per MRP</div>
+      <button class="info-btn" onclick="showInfo('2ltr-cooldrink-info')">More Info</button>
+      <div class="info-popup" id="2ltr-cooldrink-info">Two-liter family-size chilled drink.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="1 LTR MINERAL WATER">
+      <h4>1 LTR MINERAL WATER</h4>
+      <div class="price">As per MRP</div>
+      <button class="info-btn" onclick="showInfo('1ltr-water-info')">More Info</button>
+      <div class="info-popup" id="1ltr-water-info">Pure and refreshing mineral water.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="2 LTR MINERAL WATER">
+      <h4>2 LTR MINERAL WATER</h4>
+      <div class="price">As per MRP</div>
+      <button class="info-btn" onclick="showInfo('2ltr-water-info')">More Info</button>
+      <div class="info-popup" id="2ltr-water-info">Extra-large bottle of pure mineral water.</div>
+    </div>
+
+    <!--Summer Spl-->
+    <div id="summerSpecial"></div>
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Summer Special</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="LASSI SPECIAL">
+      <h4>LASSI SPECIAL</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('lassi-special-info')">More Info</button>
+      <div class="info-popup" id="lassi-special-info">Refreshing sweet yogurt-based drink.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="SPECIAL FALUDA">
+      <h4>SPECIAL FALUDA</h4>
+      <div class="price">₹120</div>
+      <button class="info-btn" onclick="showInfo('special-faluda-info')">More Info</button>
+      <div class="info-popup" id="special-faluda-info">Cold dessert beverage made with milk, vermicelli, and flavors.</div>
+    </div>
+
+
+    <!--Desserts-->
+    <div id="desserts"></div>
+
+    <h3 style="grid-column: 1 / -1; margin: 8px 0 8px;">Desserts</h3>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="ICE CREAM">
+      <h4>ICE CREAM</h4>
+      <div class="price">MRP</div>
+      <button class="info-btn" onclick="showInfo('ice-cream-info')">More Info</button>
+      <div class="info-popup" id="ice-cream-info">Assorted ice cream flavors served chilled.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="QURBANI KA MEETHA">
+      <h4>QURBANI KA MEETHA</h4>
+      <div class="price">₹100</div>
+      <button class="info-btn" onclick="showInfo('qurbani-meetha-info')">More Info</button>
+      <div class="info-popup" id="qurbani-meetha-info">Traditional Hyderabadi dessert made with dried apricots.</div>
+    </div>
+
+    <div class="menu-card">
+      <img src="PATH_TO_IMAGE" alt="QURBANI WITH ICE CREAM">
+      <h4>QURBANI WITH ICE CREAM</h4>
+      <div class="price">₹150</div>
+      <button class="info-btn" onclick="showInfo('qurbani-icecream-info')">More Info</button>
+      <div class="info-popup" id="qurbani-icecream-info">Dried apricot dessert served with ice cream.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Chicken Biryani Handi Section -->
+ <div id="Handi"></div>
+
+<div class="menu-section" id="chicken-biryani-handi">
+  <div class="section-title">Chicken Biryani Handi</div>
+  <div class="menu-grid">
+
+    <div class="menu-card" style="grid-column: 1 / -1; text-align: center;">
+      <img src="PATH_TO_IMAGE" alt="Chicken Biryani Handi">
+      <h4>Perfect for Get-Together Parties, Birthdays, and all Celebrations</h4>
+    </div>
+
+    <div class="menu-card">
+      <h4>50 Members</h4>
+      <div class="price">₹5000</div>
+      <button class="info-btn" onclick="showInfo('biryani-50-info')">More Info</button>
+      <div class="info-popup" id="biryani-50-info">Large handi of Chicken Biryani serving 50 members, perfect for big gatherings.</div>
+    </div>
+
+    <div class="menu-card">
+      <h4>30 Members</h4>
+      <div class="price">₹3000</div>
+      <button class="info-btn" onclick="showInfo('biryani-30-info')">More Info</button>
+      <div class="info-popup" id="biryani-30-info">Medium handi of Chicken Biryani serving 30 members, ideal for smaller celebrations.</div>
+    </div>
+
+  </div>
+</div>
+
+
+  <button class="menu-fab" onclick="toggleMenu()">🍽 Menu</button>
+
+  <style>
+/* Floating Menu Button */
+.menu-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 999;
+}
+
+/* Menu Container */
+.category-overlay {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  background: black;
+  padding: 15px;
+  border-radius: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+}
+
+/* Main Category Buttons */
+.category-overlay button {
+  background: #333;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  color: white;
+  font-size: 15px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.category-overlay button:hover {
+  background: #444;
+}
+
+/* Subcategory Container */
+.subcategory {
+  display: none;
+  flex-direction: column;
+  margin-left: 20px;
+  gap: 5px;
+}
+
+/* Subcategory Buttons */
+.subcategory button {
+  background: #222;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #ddd;
+}
+
+.subcategory button:hover {
+  background: #333;
+}
+</style>
+
+
+  <!-- Floating Menu Button -->
+<button class="menu-fab" onclick="toggleMenu()">🍽 Menu</button>
+
+<div class="category-overlay" id="categoryMenu">
+  
+  <!-- Chinese -->
+  <button onclick="toggleSubcategory('chineseSub')">🥢 Chinese</button>
+  <div class="subcategory" id="chineseSub">
+    <!-- Non Veg -->
+    <button onclick="scrollToSection('nonVegSoups')">🍗 Non Veg Soups</button>
+    <button onclick="scrollToSection('nonVegSnacks')">🍤 Non Veg Snacks</button>
+    <button onclick="scrollToSection('nonVegNoodles')">🍜 Non Veg Noodles</button>
+    <button onclick="scrollToSection('nonVegFriedRice')">🍚 Non Veg Fried Rice</button>
+    <button onclick="scrollToSection('nonVegCurries')">🍲 Non Veg Curries</button>
+    <!-- Veg -->
+    <button onclick="scrollToSection('vegSoups')">🥣 Veg Soups</button>
+    <button onclick="scrollToSection('vegSnacks')">🥟 Veg Snacks</button>
+    <button onclick="scrollToSection('vegCurries')">🥘 Veg Curries</button>
+    <button onclick="scrollToSection('vegNoodles')">🍜 Veg Noodles</button>
+    <button onclick="scrollToSection('vegFriedRice')">🍚 Veg Fried Rice</button>
+    <button onclick="scrollToSection('vegTandoor')">🔥 Veg from Tandoor</button>
+  </div>
+
+  <!-- Seafood -->
+  <button onclick="toggleSubcategory('seafoodSub')">🐟 Sea Foods</button>
+  <div class="subcategory" id="seafoodSub">
+    <button onclick="scrollToSection('seafoodSnacks')">🍤 Sea Food Snacks</button>
+    <button onclick="scrollToSection('tandooriSeafoods')">🔥 Tandoori Sea Foods</button>
+    <button onclick="scrollToSection('seafoodCurries')">🍲 Sea Food Curries</button>
+  </div>
+
+  <!-- Curries -->
+  <button onclick="toggleSubcategory('curriesSub')">🍲 Curries</button>
+  <div class="subcategory" id="curriesSub">
+    <button onclick="scrollToSection('indianNonVegCurries')">🍗 Indian Non Veg Curries</button>
+    <button onclick="scrollToSection('dal')">🌾 Dal</button>
+    <button onclick="scrollToSection('indianVegCurries')">🥘 Indian Veg Curries</button>
+  </div>
+
+  <!-- Tandoor -->
+    <button onclick="scrollToSection('nonVegTandoor')">🔥 Non Veg Tandoor</button>
+  
+  <!-- Biriyani -->
+  <button onclick="scrollToSection('biriyani')">🍛 Biriyani</button>
+  
+  <!-- Arabian Mandi -->
+  <button onclick="scrollToSection('arabianMandi')">🐪 Arabian Mandi</button>
+
+  <!-- Specials -->
+  <button onclick="toggleSubcategory('specialsSub')">⭐ Specials</button>
+  <div class="subcategory" id="specialsSub">
+    <button onclick="scrollToSection('teetar')">🪶 Teetar</button>
+    <button onclick="scrollToSection('natuKodi')">🐓 Natu Kodi</button>
+    <button onclick="scrollToSection('splSnacks')">🍢 Spl Snacks</button>
+  </div>
+
+  <!-- Bread -->
+  <button onclick="toggleSubcategory('breadSub')">🥖 Indian Bread</button>
+  <div class="subcategory" id="breadSub">
+    <button onclick="scrollToSection('rotis')">🍞 Rotis</button>
+    <button onclick="scrollToSection('naan')">🫓 Naan</button>
+    <button onclick="scrollToSection('parathas')">🥯 Parathas</button>
+  </div>
+
+
+  <!--Shawarma-->
+  <button onclick="scrollToSection('shawarma')">🌯 Shawarma</button>
+
+  <!-- Other -->
+  <button onclick="toggleSubcategory('otherSub')">📜 Other</button>
+  <div class="subcategory" id="otherSub">
+    <button onclick="scrollToSection('vegPizza')">🍕 Veg Pizza</button>
+    <button onclick="scrollToSection('vegBurger')">🍔 Veg Burger</button>
+    <button onclick="scrollToSection('vegSandwich')">🥪 Veg Sandwich</button>
+    <button onclick="scrollToSection('vegGrilledSandwich')">🥪 Veg Grilled Sandwich</button>
+    <button onclick="scrollToSection('chickenPizza')">🍕 Chicken Pizza</button>
+    <button onclick="scrollToSection('chickenBurger')">🍔 Chicken Burger</button>
+    <button onclick="scrollToSection('chickenGrilledSandwich')">🥪 Chicken Grilled Sandwich</button>
+    <button onclick="scrollToSection('chickenSandwich')">🥪 Chicken Sandwich</button>
+  </div>
+
+    <!-- Drinks -->
+  <button onclick="toggleSubcategory('drinksSub')">🥤 Drinks</button>
+  <div class="subcategory" id="drinksSub">
+    <button onclick="scrollToSection('beverages')">🥤 Beverages</button>
+    <button onclick="scrollToSection('coolDrinks')">🥶 Cool Drinks</button>
+    <button onclick="scrollToSection('summerSpecial')">🍹 Summer Special</button>
+  </div>
+
+  <!--Desserts-->
+  <button onclick="scrollToSection('desserts')">🍰 Desserts</button>
+
+  <!-- Chicken Biryani Handi -->
+  <button onclick="scrollToSection('Handi')">🍗 Handi</button>
+  
+
+</div>
+
+
+
+  <script>
+  function toggleMenu() {
+  document.getElementById("categoryMenu").style.display =
+    document.getElementById("categoryMenu").style.display === "flex"
+      ? "none"
+      : "flex";
+}
+
+function toggleSubcategory(id) {
+  const subMenu = document.getElementById(id);
+  subMenu.style.display = subMenu.style.display === "flex" ? "none" : "flex";
+}
+
+
+  function scrollToSection(id) {
+    var element = document.getElementById(id);
+    
+    if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        
+        // Hide menu if it exists
+        var categoryMenu = document.getElementById("categoryMenu");
+        if (categoryMenu) {
+            categoryMenu.style.display = "none";
+        }
+    } else {
+        console.warn("No element found with id:", id);
+    }
+}
+
+
+
+    function showInfo(id) {
+      const popup = document.getElementById(id);
+      if (!popup) return;
+
+      // Find currently open popup (if any)
+      const open = document.querySelector('.info-popup.open');
+
+      // If there's an open popup and it's not the one we clicked, close it
+      if (open && open !== popup) {
+        open.classList.remove('open');
+      }
+
+      // Toggle the clicked popup
+      popup.classList.toggle('open');
+    }
+
+    // Close any open popup when clicking outside a menu-card
+    document.addEventListener('click', (e) => {
+      // if click is inside a .menu-card (button or popup), do nothing
+      if (e.target.closest('.menu-card')) return;
+
+      const open = document.querySelector('.info-popup.open');
+      if (open) open.classList.remove('open');
+    });
+
+    
+  </script>
+</body>
+</html>
